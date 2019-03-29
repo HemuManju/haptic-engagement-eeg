@@ -1,0 +1,21 @@
+# EEG data parameters
+epoch_length: 2
+n_freqs:      6
+n_electrodes: 9
+s_freq:       256
+freq_bands:   [[4, 7], [8, 10], [11, 13], [14, 22], [23, 35], [35, 45]]
+##---------------------------------------------------------------------##
+# Experiment 0
+# All subjects are used for training and testing
+subjects:     ['8801', '8802', '8808', '8815', '8816', '8819', '8820',
+'8823', '8827', '8830']
+test_subjects : []
+hand_type:         ['dominant', 'non_dominant']
+# Path
+raw_eeg_path : 'data/raw/eeg_data/'
+raw_emg_path : 'data/raw/haptic_data/'
+raw_eeg_dataset : 'data/interim/raw_eeg_exp_0_dataset.h5'
+clean_eeg_dataset : 'data/interim/clean_eeg_exp_0_dataset.h5'
+raw_emg_dataset : 'data/interim/raw_haptic_exp_0_dataset.h5'
+trained_model_path : 'models/experiment_0'
+##---------------------------------------------------------------------##
