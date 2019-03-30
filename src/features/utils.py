@@ -1,5 +1,6 @@
 import deepdish as dd
 from pathlib import Path
+import pickle
 
 
 def read_eeg_epochs(subject, hand_type, config):
