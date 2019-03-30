@@ -19,6 +19,7 @@ def eeg_dataset(subjects, hand_type):
     """
     eeg_dataset = {}
     for subject in subjects:
+        print(subject)
         data = collections.defaultdict(dict)
         for hand in hand_type:
             data['eeg'][hand] = create_eeg_epochs(subject, hand)

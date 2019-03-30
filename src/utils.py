@@ -3,7 +3,7 @@ import deepdish as dd
 from pathlib import Path
 import numpy as np
 from contextlib import contextmanager
-
+import pickle
 
 
 class skip(object):
@@ -59,3 +59,41 @@ def skip_run_code(flag, f):
         yield check_active
     except SkipWith:
         pass
+
+
+def save_dataset(path, dataset, save):
+    """save the dataset.
+
+    Parameters
+    ----------
+    path : str
+        path to save.
+    dataset : dataset
+        hdf5 dataset.
+    save : Bool
+
+    """
+    if save:
+        dd.io.save(path, dataset)
+
+    return None
+
+
+def save_dataframe_dict(path, dataframe, save):
+    """save the dataset.
+
+    Parameters
+    ----------
+    path : str
+        path to save.
+    dataframe : dict
+        dictionary of pandas dataframe to save
+
+    save : Bool
+
+    """
+    if save:
+        with open(path, 'wb') as f:
+            pickle.dump(dataframe, f, pickle.HIGHEST_PROTOCOL)
+
+    return None
