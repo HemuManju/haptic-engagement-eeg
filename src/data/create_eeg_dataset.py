@@ -4,7 +4,7 @@ import collections
 from .eeg_utils import *
 
 
-def eeg_dataset(subjects, hand_type):
+def eeg_dataset(subjects, hand_type, control_type, config):
     """Create the data with each subject data in a dictionary.
 
     Parameter
@@ -18,11 +18,12 @@ def eeg_dataset(subjects, hand_type):
 
     """
     eeg_dataset = {}
+    nested_dict = lambda: collections.defaultdict(nested_dict)
     for subject in subjects:
-        print(subject)
-        data = collections.defaultdict(dict)
+        data = nested_dict()
         for hand in hand_type:
-            data['eeg'][hand] = create_eeg_epochs(subject, hand)
+            for control in control_type:
+                data['eeg'][hand][control] = create_eeg_epochs(subject, hand, control, config)
         eeg_dataset[subject] = data
 
     return eeg_dataset

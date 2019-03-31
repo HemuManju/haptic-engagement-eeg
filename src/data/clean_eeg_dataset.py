@@ -92,7 +92,7 @@ def clean_with_ica(epochs, show_ica=False):
     return epochs, ica
 
 
-def clean_dataset(subjects, hand_type):
+def clean_dataset(subjects, hand_type, control_type, config):
     """Create cleaned dataset (by running autoreject and ICA) with each subject data in a dictionary.
 
     Parameter
@@ -108,15 +108,16 @@ def clean_dataset(subjects, hand_type):
     clean_eeg_dataset = {}
     read_path = Path(__file__).parents[2] / config['raw_eeg_dataset']
     raw_eeg = dd.io.load(str(read_path))  # load the raw eeg
-
+    nested_dict = lambda: collections.defaultdict(nested_dict)
     for subject in subjects:
-        data = collections.defaultdict(dict)
+        data = nested_dict()
         for hand in hand_type:
-            epochs = raw_eeg[subject]['eeg'][hand]
-            ica_epochs, ica = clean_with_ica(epochs)
-            repaired_eeg = autoreject_repair_epochs(ica_epochs)
-            data['eeg'][hand] = ica_epochs
-            data['ica'][hand] = ica
+            for control in control_type:
+                epochs = raw_eeg[subject]['eeg'][hand][control]
+                ica_epochs, ica = clean_with_ica(epochs)
+                repaired_eeg = autoreject_repair_epochs(ica_epochs)
+                data['eeg'][hand][control] = ica_epochs
+                data['ica'][hand][control] = ica
         clean_eeg_dataset[subject] = data
 
     return clean_eeg_dataset

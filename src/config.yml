@@ -13,13 +13,16 @@ subjects:     ['8801', '8802', '8808', '8815', '8816', '8819', '8820',
 '8823', '8827', '8830']
 test_subjects : []
 hand_type:    ['dominant', 'non_dominant']
+control_type : ['no_force', 'error_reduction', 'error_augmentation']
+
 # Path
 raw_eeg_path : 'data/raw/eeg_data/'
-raw_emg_path : 'data/raw/haptic_data/'
+raw_haptic_path : 'data/raw/haptic_data/'
 raw_eeg_dataset : 'data/interim/raw_eeg_exp_0_dataset.h5'
 clean_eeg_dataset : 'data/interim/clean_eeg_exp_0_dataset.h5'
+eeg_haptic_dataset : 'data/processed/eeg_haptic_exp_0_dataset.h5'
 band_power_dataset : 'data/processed/band_power_exp_0_dataset.pkl'
 engagement_index_dataset : 'data/processed/engagement_index_exp_0_dataset.pkl'
-raw_emg_dataset : 'data/interim/raw_haptic_exp_0_dataset.h5'
+raw_haptic_dataset : 'data/interim/raw_haptic_exp_0_dataset.h5'
 trained_model_path : 'models/experiment_0'
 ##---------------------------------------------------------------------##

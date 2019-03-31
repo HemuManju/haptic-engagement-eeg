@@ -5,7 +5,7 @@ import mne
 from .utils import read_eeg_epochs
 
 
-def get_band_power(subject, hand_type, config):
+def get_band_power(subject, hand_type, control_type, config):
     """Calculate the band power of EEG signals.
 
     Parameters
@@ -23,7 +23,7 @@ def get_band_power(subject, hand_type, config):
         6 band powers of given subject and hand type at different sensor locations.
 
     """
-    epochs = read_eeg_epochs(subject, hand_type, config)
+    epochs = read_eeg_epochs(subject, hand_type, control_type, config)
     picks = mne.pick_types(epochs.info, eeg=True)
     ch_names = epochs.ch_names[picks[0]:picks[-1]+1]
     psds, freqs = psd_multitaper(epochs, fmin=1.0, fmax=45.0, picks=picks)
@@ -40,12 +40,13 @@ def get_band_power(subject, hand_type, config):
     df = pd.DataFrame(data, columns=columns)
     df['subject'] = subject
     df['hand_type'] = hand_type
+    df['control_type'] = control_type
 
     return df
 
 
 
-def all_subjects_band_power(subjects, hand_type, config):
+def band_power_dataset(subjects, hand_type, control_type, config):
     """Band power of all subjects.
 
     Parameters
@@ -68,7 +69,8 @@ def all_subjects_band_power(subjects, hand_type, config):
     for subject in subjects:
         df = []
         for hand in hand_type:
-            df.append(get_band_power(subject, hand, config))
-        band_power_dataset[subject] = pd.concat([df[0], df[1]], ignore_index=True)
+            for control in control_type:
+                df.append(get_band_power(subject, hand, control, config))
+        band_power_dataset[subject] = pd.concat([x for x in df], ignore_index=True)
 
     return band_power_dataset

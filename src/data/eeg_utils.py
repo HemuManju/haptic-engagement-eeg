@@ -3,8 +3,6 @@ import numpy as np
 from pathlib import Path
 import seaborn as sb
 import pandas as pd
-from mne.parallel import parallel_func
-from mne.decoding import CSP
 from scipy import signal
 from scipy.signal import resample
 from datetime import datetime
@@ -51,30 +49,6 @@ def get_eeg_path(subject, hand_type, raw=True):
     return eeg_path
 
 
-def get_emg_path(subject, hand_type):
-    """Get the trial file path  a subject.
-
-    Parameter
-    ----------
-    subject : string of subject ID e.g. 7707
-    trial   : HighFine, HighGross, LowFine, LowGross
-
-    Returns
-    ----------
-    trial_path   : path to a trial (Force) data to the subject
-
-    """
-    # Trial time
-    path = Path(__file__).parents[2] / config['raw_emg_path'] / subject
-    for file in path.iterdir():
-        file_name = file.name.split('_')
-        if file_name[1] == trial:
-            break
-    trial_path = file
-
-    return trial_path
-
-
 def get_eeg_time(subject, hand_type):
     """Start time of eeg recording.
 
@@ -100,7 +74,31 @@ def get_eeg_time(subject, hand_type):
     return eeg_time
 
 
-def get_trial_time(subject, trial):
+def get_haptic_path(subject, hand_type, control_type, config):
+    """Get the trial file path  a subject.
+
+    Parameter
+    ----------
+    subject : string of subject ID e.g. 7707
+    trial   : HighFine, HighGross, LowFine, LowGross
+
+    Returns
+    ----------
+    trial_path   : path to a trial (Force) data to the subject
+
+    """
+    # Trial time
+    path = Path(__file__).parents[2] / config['raw_haptic_path'] / subject / hand_type
+    for file in path.iterdir():
+        file_name = file.name.split('.')
+        if file_name[0] == control_type:
+            break
+    haptic_path = file
+
+    return haptic_path
+
+
+def get_haptic_time(subject, hand_type, control_type, config):
     """Get the start and end time of a trial to align with eeg data.
 
     Parameter
@@ -114,18 +112,23 @@ def get_trial_time(subject, trial):
 
     """
     # EEG time
-    eeg_time = get_eeg_time(subject)
-    trial_path = get_trial_path(subject, trial)
+    haptic_path = get_haptic_path(subject, hand_type, control_type, config)
+    eeg_time = get_eeg_time(subject, hand_type)
 
     # Trial time
-    trial_time = np.genfromtxt(trial_path, dtype=str, delimiter=',',
-                               usecols=0, skip_footer=150, skip_header=100).tolist()
+    column_name = np.genfromtxt(haptic_path, dtype=str, delimiter=';', max_rows=1).tolist()
+    time_idx = column_name.index('dataTime')
+    trial_time = np.genfromtxt(haptic_path, dtype=str, delimiter=';', usecols=time_idx, skip_header=1).tolist()
+    # Change the AM or PM
+    if eeg_time.hour >= 12:
+        start_time = trial_time[0].split('_')[1] + ' PM'
+        end_time = trial_time[-1].split('_')[1] + ' PM'
 
     # Update year, month, and day
-    start_t = datetime.strptime(trial_time[0], '%H:%M:%S:%f')
+    start_t = datetime.strptime(start_time, '%I%M%S%f %p')
     start_t = start_t.replace(year=eeg_time.year,
                               month=eeg_time.month, day=eeg_time.day)
-    end_t = datetime.strptime(trial_time[-1], '%H:%M:%S:%f')
+    end_t = datetime.strptime(end_time, '%I%M%S%f %p')
     end_t = end_t.replace(year=eeg_time.year,
                           month=eeg_time.month, day=eeg_time.day)
 
@@ -204,7 +207,34 @@ def create_eeg_epochs(subject, hand_type, preload=True):
     return epochs
 
 
-def read_eeg_epochs(subject, hand_type):
+def create_eeg_epochs(subject, hand_type, control_type, config, preload=True):
+    """Get the epcohed eeg data excluding unnessary channels from fif file and also filter the signal.
+
+    Parameter
+    ----------
+    subject : string of subject ID e.g. 7707
+    trial   : HighFine, HighGross, LowFine, LowGross
+
+    Returns
+    ----------
+    epochs  : epoched data
+
+    """
+    trial_start, trial_end = get_haptic_time(subject, hand_type, control_type, config)
+    raw = get_eeg_data(subject, hand_type)
+    raw.notch_filter(60, filter_length='auto',
+                             phase='zero', verbose=False)  # Line noise
+    raw.filter(l_freq=1, h_freq=50, fir_design='firwin', verbose=False)  # Band pass filter
+    raw.set_eeg_reference('average')
+    raw_selected = raw.copy().crop(tmin=trial_start, tmax=trial_end)
+    events = mne.make_fixed_length_events(raw_selected, duration=config['epoch_length'])
+    epochs = mne.Epochs(raw_selected, events, tmin=0,
+                        tmax=config['epoch_length'], verbose=False, preload=preload)
+
+    return epochs
+
+
+def read_eeg_epochs(subject, hand_type, control_type, config):
     """Reads the eeg epoch file of given subject and trial
 
     Parameters
@@ -222,6 +252,6 @@ def read_eeg_epochs(subject, hand_type):
     """
     eeg_path = str(Path(__file__).parents[2] / config['clean_eeg_dataset'])
     data = dd.io.load(eeg_path, group='/' + subject)
-    eeg_epochs = data['eeg'][hand_type]
+    eeg_epochs = data['eeg'][hand_type][control_type]
 
     return eeg_epochs
