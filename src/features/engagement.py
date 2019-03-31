@@ -77,7 +77,7 @@ def get_engagement_index(data, config):
     return df
 
 
-def engagement_index(subjects, hand_type, config):
+def engagement_index(subjects, hand_type, control_type, config):
     """Enagement index of subjects and hand_type.
 
     Parameters
@@ -97,15 +97,19 @@ def engagement_index(subjects, hand_type, config):
     """
 
     read_path = Path(__file__).parents[2] / config['band_power_dataset']
-    all_data = read_dataframe_dict(read_path)
+    data = read_dataframe_dict(read_path)
     engagement_index = pd.DataFrame(np.empty((0,len(config['features']))), columns=config['features'])
     for subject in subjects:
-        temp_data = all_data[subject]
+        subject_data = data[subject]
         for hand in hand_type:
-            data = temp_data[temp_data['hand_type']==hand]
-            df = get_engagement_index(data, config)
-            df['hand_type'] = hand
-        df['subject'] = subject
-        engagement_index =  pd.concat([engagement_index, df], ignore_index=True, sort=False)
+            hand_data = subject_data[subject_data['hand_type']==hand]
+            for control in control_type:
+                control_data = hand_data[hand_data['control_type']==control]
+                df = get_engagement_index(control_data, config)
+                df['subject'] = subject
+                df['hand_type'] = hand
+                df['control_type'] = control
+
+                engagement_index =  pd.concat([engagement_index, df], ignore_index=True, sort=False)
 
     return engagement_index
