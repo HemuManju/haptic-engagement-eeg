@@ -3,7 +3,7 @@ from pathlib import Path
 import pickle
 
 
-def read_eeg_epochs(subject, hand_type, config):
+def read_eeg_epochs(subject, hand_type, control_type, config):
     """Reads the eeg epoch file of given subject and trial
 
     Parameters
