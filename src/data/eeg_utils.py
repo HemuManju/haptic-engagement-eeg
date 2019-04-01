@@ -39,12 +39,12 @@ def get_eeg_path(subject, hand_type, raw=True):
     # EEG file
     path = Path(__file__).parents[2] / config['raw_eeg_path'] / subject
     fname = [str(f) for f in path.iterdir() if f.suffix == '.edf']
-    fname.sort() # sorted according to time
+    fname.sort()  # sorted according to time
     id = 1 if hand_type == 'dominant' else 3
     if raw:
         eeg_path = fname[id]  # raw file
     else:
-        eeg_path = fname[id-1]  # decontaminated file
+        eeg_path = fname[id - 1]  # decontaminated file
 
     return eeg_path
 
@@ -88,7 +88,8 @@ def get_haptic_path(subject, hand_type, control_type, config):
 
     """
     # Trial time
-    path = Path(__file__).parents[2] / config['raw_haptic_path'] / subject / hand_type
+    path = Path(__file__).parents[2] / \
+        config['raw_haptic_path'] / subject / hand_type
     for file in path.iterdir():
         file_name = file.name.split('.')
         if file_name[0] == control_type:
@@ -116,9 +117,11 @@ def get_haptic_time(subject, hand_type, control_type, config):
     eeg_time = get_eeg_time(subject, hand_type)
 
     # Trial time
-    column_name = np.genfromtxt(haptic_path, dtype=str, delimiter=';', max_rows=1).tolist()
+    column_name = np.genfromtxt(
+        haptic_path, dtype=str, delimiter=';', max_rows=1).tolist()
     time_idx = column_name.index('dataTime')
-    trial_time = np.genfromtxt(haptic_path, dtype=str, delimiter=';', usecols=time_idx, skip_header=1).tolist()
+    trial_time = np.genfromtxt(
+        haptic_path, dtype=str, delimiter=';', usecols=time_idx, skip_header=1).tolist()
     # Change the AM or PM
     if eeg_time.hour >= 12:
         start_time = trial_time[0].split('_')[1] + ' PM'
@@ -157,11 +160,10 @@ def get_eeg_data(subject, hand_type):
 
     """
 
-
     eeg_path = get_eeg_path(subject, hand_type)
     eeg_time = get_eeg_time(subject, hand_type)
     # EEG info
-    info = mne.create_info(ch_names=['POz','Fz','Cz','C3','C4','F3','F4','P3','P4','STI 014'],
+    info = mne.create_info(ch_names=['POz', 'Fz', 'Cz', 'C3', 'C4', 'F3', 'F4', 'P3', 'P4', 'STI 014'],
                            ch_types=['eeg'] * 9 + ['stim'],
                            sfreq=256.0,
                            montage="standard_1020")
@@ -197,8 +199,9 @@ def create_eeg_epochs(subject, hand_type, preload=True):
     """
     raw = get_eeg_data(subject, hand_type)
     raw.notch_filter(60, filter_length='auto',
-                             phase='zero', verbose=False)  # Line noise
-    raw.filter(l_freq=1, h_freq=50, fir_design='firwin', verbose=False)  # Band pass filter
+                     phase='zero', verbose=False)  # Line noise
+    raw.filter(l_freq=1, h_freq=50, fir_design='firwin',
+               verbose=False)  # Band pass filter
     raw.set_eeg_reference('average')
     events = mne.make_fixed_length_events(raw, duration=config['epoch_length'])
     epochs = mne.Epochs(raw, events, tmin=0,
@@ -220,14 +223,17 @@ def create_eeg_epochs(subject, hand_type, control_type, config, preload=True):
     epochs  : epoched data
 
     """
-    trial_start, trial_end = get_haptic_time(subject, hand_type, control_type, config)
+    trial_start, trial_end = get_haptic_time(
+        subject, hand_type, control_type, config)
     raw = get_eeg_data(subject, hand_type)
     raw.notch_filter(60, filter_length='auto',
-                             phase='zero', verbose=False)  # Line noise
-    raw.filter(l_freq=1, h_freq=50, fir_design='firwin', verbose=False)  # Band pass filter
+                     phase='zero', verbose=False)  # Line noise
+    raw.filter(l_freq=1, h_freq=50, fir_design='firwin',
+               verbose=False)  # Band pass filter
     raw.set_eeg_reference('average')
     raw_selected = raw.copy().crop(tmin=trial_start, tmax=trial_end)
-    events = mne.make_fixed_length_events(raw_selected, duration=config['epoch_length'])
+    events = mne.make_fixed_length_events(
+        raw_selected, duration=config['epoch_length'])
     epochs = mne.Epochs(raw_selected, events, tmin=0,
                         tmax=config['epoch_length'], verbose=False, preload=preload)
 

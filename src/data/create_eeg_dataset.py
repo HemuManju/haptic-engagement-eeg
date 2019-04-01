@@ -19,8 +19,8 @@ def eeg_dataset(subjects, hand_type, control_type, config):
     """
     eeg_dataset = {}
     nested_dict = lambda: collections.defaultdict(nested_dict)
+    data = nested_dict()
     for subject in subjects:
-        data = nested_dict()
         for hand in hand_type:
             for control in control_type:
                 data['eeg'][hand][control] = create_eeg_epochs(subject, hand, control, config)
