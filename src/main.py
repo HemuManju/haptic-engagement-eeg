@@ -1,5 +1,6 @@
 import yaml
 import pandas as pd
+import numpy as np
 from utils import *
 from data.create_eeg_dataset import eeg_dataset
 from data.create_haptic_dataset import haptic_dataset
@@ -8,6 +9,7 @@ from features.band_power import band_power_dataset
 from features.engagement import engagement_index
 from features.utils import save_to_r_dataset, read_dataframe_dict
 
+config = yaml.load(open('config.yml'))
 
 with skip_run_code('skip', 'create_eeg_dataset') as check, check():
     eeg_dataset = eeg_dataset(config['subjects'], config['hand_type'], config['control_type'],

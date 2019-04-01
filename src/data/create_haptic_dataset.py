@@ -23,7 +23,7 @@ def haptic_dataset(subjects, hand_type, control_type, config):
     for subject in subjects:
         for hand in hand_type:
             for control in control_type:
-                data['haptic'][hand][control] = create_haptic_emg_epochs(
+                data['haptic'][hand][control] = create_haptic_emg_epoch(
                     subject, hand, control, config)
         haptic_dataset[subject] = data
 

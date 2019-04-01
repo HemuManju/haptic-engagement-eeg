@@ -22,7 +22,8 @@ def get_haptic_path(subject, hand_type, control_type, config):
 
     """
     # Trial time
-    path = Path(__file__).parents[2] / config['raw_haptic_path'] / subject / hand_type
+    path = Path(__file__).parents[2] / \
+        config['raw_haptic_path'] / subject / hand_type
     for file in path.iterdir():
         file_name = file.name.split('.')
         if file_name[0] == control_type:
@@ -69,14 +70,18 @@ def get_haptic_emg_data(subject, hand_type, control_type, config):
     haptic_path = get_haptic_path(subject, hand_type, control_type, config)
 
     # Trial time
-    column_name = np.genfromtxt(haptic_path, dtype=str, delimiter=';', max_rows=1).tolist()
-    features = ['CursorPosition', 'desiredPosition', ' desiredPointOnSpline', 'proportionalGain', 'keyPressed']
-    dummy = np.genfromtxt(haptic_path, dtype=str, delimiter=';', usecols=0, skip_header=1).tolist()
+    column_name = np.genfromtxt(
+        haptic_path, dtype=str, delimiter=';', max_rows=1).tolist()
+    features = ['CursorPosition', 'desiredPosition',
+                ' desiredPointOnSpline', 'proportionalGain', 'keyPressed']
+    dummy = np.genfromtxt(haptic_path, dtype=str,
+                          delimiter=';', usecols=0, skip_header=1).tolist()
     ids = [i for i, x in enumerate(column_name) if x in features]
     haptic_data = np.empty((0, len(dummy)))
     columns = []
     for i, id in enumerate(ids):
-        data = np.genfromtxt(haptic_path, dtype=str, delimiter=';', usecols=id, skip_header=1).tolist()
+        data = np.genfromtxt(haptic_path, dtype=str,
+                             delimiter=';', usecols=id, skip_header=1).tolist()
         columns.append(features[i].lower())
         array = convert_to_array(data)
         haptic_data = np.append(haptic_data, array, axis=0)
@@ -105,14 +110,16 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
 
     """
 
-    haptic_data, columns = get_haptic_emg_data(subject, hand_type, control_type, config)
+    haptic_data, columns = get_haptic_emg_data(
+        subject, hand_type, control_type, config)
     id_cursor = columns.index('cursorposition')
     id_desired = columns.index('desiredposition')
     id_gain = columns.index('proportionalgain')
 
     # Calculate the error
-    error = haptic_data[id_cursor*3:id_cursor*3+3] - haptic_data[id_desired*3:id_desired*3+3]
-    k = haptic_data[id_gain*3:id_gain*3+3] # gain
+    error = haptic_data[id_cursor * 3:id_cursor * 3 + 3] - \
+        haptic_data[id_desired * 3:id_desired * 3 + 3]
+    k = haptic_data[id_gain * 3:id_gain * 3 + 3]  # gain
     force = np.multiply(error, k)
 
     # Concatenate with the haptic data
@@ -120,10 +127,11 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
 
     # The data was stored in such a way that keyPressed is actual emg, so replace the name
     columns[columns.index('keypressed')] = 'emg'
-    haptic_info = [x + y for x in ['cursor', 'desired', 'spline', 'gain'] for y in ['_x', '_y', '_z']]
+    haptic_info = [x + y for x in ['cursor', 'desired',
+                                   'spline', 'gain'] for y in ['_x', '_y', '_z']]
     emg_info = ['emg_' + str(i) for i in range(8)]
-    force_info =  ['force' + x for x in ['_x', '_y', '_z']]
-    error_info =  ['error' + x for x in ['_x', '_y', '_z']]
+    force_info = ['force' + x for x in ['_x', '_y', '_z']]
+    error_info = ['error' + x for x in ['_x', '_y', '_z']]
     names_info = haptic_info + emg_info + force_info + error_info
 
     info = mne.create_info(ch_names=names_info,

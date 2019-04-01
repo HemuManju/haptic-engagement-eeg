@@ -1,7 +1,6 @@
 import yaml
 import deepdish as dd
 from pathlib import Path
-import numpy as np
 from contextlib import contextmanager
 import pickle
 
