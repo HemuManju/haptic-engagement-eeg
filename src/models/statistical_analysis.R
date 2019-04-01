@@ -1,45 +1,48 @@
 library(yaml)
 library(feather)
-library(lme4)
+library(lmerTest)
 
 # Read the configuration path
-path <- paste(getwd(),'/src/config.yml', sep='')
-config <- yaml.load_file(path)
+config <- yaml.load_file('./src/config.yml')
 
 # Read the r dataset
-r_dataset_path <- paste(getwd(),'/',config$r_dataset, sep='')
+r_dataset_path <- paste('./',config$r_dataset, sep='')
 df <- read_feather(r_dataset_path)
 
-# Convert the string data into numeric
-df$control_type[df$control_type == config$control_type[1]] <- 0
-df$control_type[df$control_type == config$control_type[2]] <- -1
-df$control_type[df$control_type == config$control_type[3]] <- 1
-
-
-# Hand type
-df$hand_type[df$hand_type == config$hand_type[1]] <- -1
-df$hand_type[df$hand_type == config$hand_type[2]] <- 1
-
 # As factor
-
 df$control_type <- as.factor(df$control_type)
 df$hand_type <- as.factor(df$hand_type)
-# As numeric
-df$subject <- as.numeric(df$subject)
+df$subject <- as.factor(df$subject)
+
+response <- df$beta_alpha_theta
+# Prior analysis 
+engagement <- lmer(response ~ 1 + (1|df$hand_type),
+                   data = df)
+summary(engagement)
+
+
+#-----------------------------------------------------------------------
+# Non-dominant as reference
+# Set reference level 
+df$control_type <- relevel(df$control_type, "no_force")
+df$hand_type[0]
+df$control_type[0]
 
 
 # Linear mixed models
-engagement.null <- lmer(df$theta_alpha ~ 1 + (1|df$subject),
-                            data = df, REML = FALSE)
-engagement.hand_type <- lmer(df$theta_alpha ~ df$hand_type + (1|df$subject),
-                        data = df, REML = FALSE)
-engagement.control_type <- lmer(df$theta_alpha ~ df$control_type + (1|df$subject),
-                            data = df, REML = FALSE)
-engagement.full_model <- lmer(df$theta_alpha ~ df$hand_type + df$control_type + (1|df$subject),
-  data = df, REML = FALSE)
+engagement <- lmer(response ~ df$hand_type*df$control_type + (1|df$subject),
+                              data = df)
+summary(engagement)
+#-----------------------------------------------------------------------
+# Dominant as reference
+# Set reference level 
+df$control_type <- relevel(df$control_type, "no_force")
+df$hand_type <- relevel(df$hand_type, "non_dominant")
+df$hand_type[0]
+df$control_type[0]
 
 
-# Null hypothesis testing
-anova(engagement.null, engagement.full_model)
-anova(engagement.hand_type, engagement.full_model)
-anova(engagement.control_type, engagement.full_model)
+# Linear mixed models
+engagement <- lmer(response ~ df$hand_type*df$control_type + (1|df$subject),
+                   data = df)
+summary(engagement)
