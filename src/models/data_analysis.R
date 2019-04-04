@@ -20,7 +20,7 @@ fit.gamma <- fitdist(feature, "gamma")
 fit.lnorm <- fitdist(feature, "lnorm")
 
 # # Verify the best fit of data
-# descdist(feature, discrete = FALSE)
+descdist(feature, discrete = FALSE)
 fit.norm$aic
 fit.weibull$aic
 fit.lnorm$aic

@@ -1,7 +1,6 @@
 library(yaml)
 library(feather)
-library(ggplot2)
-
+library(ggpubr)
 
 # Read the configuration path
 config <- yaml.load_file('./src/config.yml')
@@ -13,11 +12,9 @@ df <- read_feather(r_dataset_path)
 response <- df$beta_alpha_theta
 control <- df$control_type
 
-# Set a unique color with fill, colour, and alpha
-ggplot(df, aes(x=control, y=response)) + 
-  geom_boxplot(color="red", fill="orange", alpha=0.2)
-
-# Set a different color for each group
-ggplot(df, aes(x=control, y=response, fill=control)) + 
-  geom_boxplot(alpha=0.3, notch = TRUE) +
-  theme(legend.position="none")
+my_comparisons <- list( c("no_force", "error_augmentation"), 
+                        c("no_force", "error_reduction"), 
+                        c("error_reduction", "error_augmentation") )
+ggboxplot(df, x = 'control_type', y = 'beta_alpha_theta',
+          color = 'control_type', palette = "jco")+ 
+  stat_compare_means(comparisons = my_comparisons, label.y = c(0.05, 0.125, 0.175)+max(response))
