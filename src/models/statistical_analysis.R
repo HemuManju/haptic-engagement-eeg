@@ -14,35 +14,23 @@ df$control_type <- as.factor(df$control_type)
 df$hand_type <- as.factor(df$hand_type)
 df$subject <- as.factor(df$subject)
 
+#-----------------------------------------------------------------------
 response <- df$beta_alpha_theta
+
+#-----------------------------------------------------------------------
 # Prior analysis 
 engagement <- lmer(response ~ 1 + (1|df$hand_type),
                    data = df)
 summary(engagement)
 
-
 #-----------------------------------------------------------------------
-# Non-dominant as reference
+# Linear mixed models with hand as random effect
 # Set reference level 
 df$control_type <- relevel(df$control_type, "no_force")
 df$hand_type[0]
 df$control_type[0]
 
-
 # Linear mixed models
-engagement <- lmer(response ~ df$hand_type*df$control_type + (1|df$subject),
-                              data = df)
-summary(engagement)
-#-----------------------------------------------------------------------
-# Dominant as reference
-# Set reference level 
-df$control_type <- relevel(df$control_type, "no_force")
-df$hand_type <- relevel(df$hand_type, "non_dominant")
-df$hand_type[0]
-df$control_type[0]
-
-
-# Linear mixed models
-engagement <- lmer(response ~ df$hand_type*df$control_type + (1|df$subject),
+engagement <- lmer(response ~ df$control_type + (1|df$subject) + (1|df$hand_type),
                    data = df)
 summary(engagement)

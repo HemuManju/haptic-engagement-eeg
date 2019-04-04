@@ -25,7 +25,7 @@ with skip_run_code('skip', 'clean_eeg_dataset') as check, check():
     save_dataset(str(save_path), clean_dataset, save=True)
 
 
-with skip_run_code('run', 'create_haptic_dataset') as check, check():
+with skip_run_code('skip', 'create_haptic_dataset') as check, check():
     clean_dataset = haptic_dataset(config['subjects'], config['hand_type'], config['control_type'],
                                    config)
     save_path = Path(__file__).parents[1] / config['raw_haptic_dataset']

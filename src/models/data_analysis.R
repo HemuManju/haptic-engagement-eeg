@@ -1,6 +1,7 @@
 library(yaml)
 library(feather)
 library(car)
+library(fitdistrplus)
 library(MASS)
 
 # Read the configuration path
@@ -12,8 +13,15 @@ df <- read_feather(r_dataset_path)
 
 # Verify the distribution of features 
 feature <- df$beta_alpha_theta
-qqp(feature, "norm") # normal distribution 
-# qqp(feature, "lnorm") # lognormal distribution
-# 
-# poisson <- fitdistr(feature, "Poisson")
-# qqp(feature, "pois", poisson$estimate)
+
+fit.weibull <- fitdist(feature, "weibull")
+fit.norm <- fitdist(feature, "norm")
+fit.gamma <- fitdist(feature, "gamma")
+fit.lnorm <- fitdist(feature, "lnorm")
+
+# # Verify the best fit of data
+# descdist(feature, discrete = FALSE)
+fit.norm$aic
+fit.weibull$aic
+fit.lnorm$aic
+fit.gamma$aic
