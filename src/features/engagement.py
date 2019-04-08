@@ -3,7 +3,7 @@ from .utils import *
 import pandas as pd
 
 
-def get_engagement_index(data, config):
+def calculate_engagement_index(data, config):
     """Calculate engagement_index using different features.
 
     Parameters
@@ -105,7 +105,7 @@ def engagement_index(subjects, hand_type, control_type, config):
             hand_data = subject_data[subject_data['hand_type']==hand]
             for control in control_type:
                 control_data = hand_data[hand_data['control_type']==control]
-                df = get_engagement_index(control_data, config)
+                df = calculate_engagement_index(control_data, config)
                 df['subject'] = subject
                 df['hand_type'] = hand
                 df['control_type'] = control
