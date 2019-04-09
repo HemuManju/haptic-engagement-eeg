@@ -150,6 +150,7 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
         subject, hand_type, control_type, config)  # eeg file
     drop_id = [id for id, val in enumerate(eeg_epochs.drop_log) if val]
     if len(eeg_epochs.drop_log) != len(epochs.drop_log):
+        print(len(eeg_epochs.drop_log), len(epochs.drop_log))
         raise Exception('Two epochs are not of same length!')
     else:
         epochs.drop(drop_id)

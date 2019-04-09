@@ -18,9 +18,9 @@ def autoreject_repair_epochs(epochs, reject_plot=False):
     """
     # Cleaning with autoreject
     picks = mne.pick_types(epochs.info, eeg=True)  # Pick EEG channels
-    ar = AutoReject(n_interpolate=[1, 2, 4], n_jobs=6, picks=picks,
+    ar = AutoReject(n_interpolate=[1, 2, 3], n_jobs=6, picks=picks,
                     thresh_func='bayesian_optimization',
-                    cv=10,
+                    cv=3,
                     random_state=42, verbose=False)
 
     cleaned_epochs, reject_log = ar.fit_transform(epochs, return_log=True)
@@ -108,7 +108,7 @@ def clean_dataset(config):
     clean_eeg_dataset = {}
     read_path = Path(__file__).parents[2] / config['raw_eeg_dataset']
     raw_eeg = dd.io.load(str(read_path))  # load the raw eeg
-    nested_dict = lambda: collections.defaultdict(nested_dict)
+    def nested_dict(): return collections.defaultdict(nested_dict)
     for subject in config['subjects']:
         data = nested_dict()
         for hand in config['hand_type']:
