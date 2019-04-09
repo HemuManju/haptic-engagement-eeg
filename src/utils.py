@@ -96,3 +96,24 @@ def save_dataframe_dict(path, dataframe, save):
             pickle.dump(dataframe, f, pickle.HIGHEST_PROTOCOL)
 
     return None
+
+
+def save_to_r_dataset(df, path):
+    """Convert pandas dataframe to r dataframe.
+
+    Parameters
+    ----------
+    df : dataframe
+        Pandas dataframe.
+    path : str
+        Path to save.
+
+    Returns
+    -------
+    None
+        Description of returned object.
+
+    """
+    feather.write_dataframe(df, path)
+
+    return None

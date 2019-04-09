@@ -33,7 +33,7 @@ with skip_run_code('skip', 'create_haptic_dataset') as check, check():
 with skip_run_code('run', 'create_emg_dataset') as check, check():
     emg_dataset = create_emg_features(config)
     save_path = Path(__file__).parents[1] / config['emg_dataset']
-    save_dataset(str(save_path), clean_dataset, save=True)
+    save_dataframe_dict(str(save_path), emg_dataset, save=True)
 
 
 with skip_run_code('skip', 'band_power_dataset') as check, check():
@@ -49,8 +49,17 @@ with skip_run_code('skip', 'engagement_index') as check, check():
     save_dataframe_dict(str(save_path), engagement_index_dataset, save=True)
 
 
-with skip_run_code('skip', 'convert_to_r_dataset') as check, check():
+with skip_run_code('skip', 'convert_enagement_to_r_dataset') as check, check():
     # Read the pandas dataframe
     read_path = Path(__file__).parents[1] / config['engagement_index_dataset']
     df = read_dataframe_dict(read_path)
-    save_to_r_dataset(df, config)
+    save_path = Path(__file__).parents[1] / config['eeg_r_dataset']
+    save_to_r_dataset(df, str(save_path))
+
+
+with skip_run_code('run', 'convert_emg_to_r_dataset') as check, check():
+    # Read the pandas dataframe
+    read_path = Path(__file__).parents[1] / config['emg_dataset']
+    df = read_dataframe_dict(read_path)
+    save_path = Path(__file__).parents[1] / config['emg_r_dataset']
+    save_to_r_dataset(df, str(save_path))

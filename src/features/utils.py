@@ -40,7 +40,7 @@ def read_dataset(path):
     return data
 
 
-def save_to_r_dataset(df, config):
+def save_to_r_dataset(df, path):
     """Convert pandas dataframe to r dataframe.
 
     Parameters
@@ -56,7 +56,7 @@ def save_to_r_dataset(df, config):
         Description of returned object.
 
     """
-    path = Path(__file__).parents[2] / config['r_dataset']
+
     feather.write_dataframe(df, path)
 
     return None
