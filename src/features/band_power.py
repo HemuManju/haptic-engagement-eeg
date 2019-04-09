@@ -46,7 +46,7 @@ def get_band_power(subject, hand_type, control_type, config):
 
 
 
-def band_power_dataset(subjects, hand_type, control_type, config):
+def band_power_dataset(config):
     """Band power of all subjects.
 
     Parameters
@@ -66,10 +66,10 @@ def band_power_dataset(subjects, hand_type, control_type, config):
     """
 
     band_power_dataset = {}
-    for subject in subjects:
+    for subject in config['subjects']:
         df = []
-        for hand in hand_type:
-            for control in control_type:
+        for hand in config['hand_type']:
+            for control in config['control_type']:
                 df.append(get_band_power(subject, hand, control, config))
         band_power_dataset[subject] = pd.concat([x for x in df], ignore_index=True)
 

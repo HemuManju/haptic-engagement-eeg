@@ -26,6 +26,20 @@ def read_eeg_epochs(subject, hand_type, control_type, config):
     return eeg_epochs
 
 
+def read_dataset(path):
+    """Read the hdf5 dataset
+
+    Parameters
+    ----------
+    path : string
+        Path to the dataset
+
+    """
+    data = dd.io.load(path)
+
+    return data
+
+
 def save_to_r_dataset(df, config):
     """Convert pandas dataframe to r dataframe.
 
