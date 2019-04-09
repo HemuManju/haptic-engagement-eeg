@@ -1,5 +1,4 @@
-# EEG data parameters
-epoch_length:             2
+# Global constants
 n_freqs:                  6
 n_electrodes:             9
 n_emg_electrodes:         8
@@ -11,6 +10,8 @@ features:                 ['beta_alpha_theta', 'theta_alpha','theta','1_alpha', 
 emg_features:             ['zero_crosses', 'slope_zero_crosses', 'rms', 'psd']
 ##---------------------------------------------------------------------##
 # Experiment 0
+# EEG parameters
+epoch_length:             2
 # All subjects are used for training and testing
 subjects:                 ['8801', '8802', '8808', '8815', '8816', '8819', '8820', '8823', '8827', '8830']
 test_subjects:            []

@@ -104,13 +104,13 @@ def get_emg_feature(emg_data, config):
         An array of calculated emg features.
 
     """
-
-    zero_crosses = zero_crosses_counter(emg_data, config)
-    slope_zero_crosses = slope_zero_crosses_counter(emg_data, config)
-    rms_values = rms(emg_data)
-    psd = welch_power(emg_data, config)
-    data = np.vstack((zero_crosses, slope_zero_crosses, rms_values, psd)).T
-    df = pd.DataFrame(data, columns=config['emg_features'])
+    for i in range(emg_data.shape[0]):
+        zero_crosses = zero_crosses_counter(emg_data[i,:,:], config)
+        slope_zero_crosses = slope_zero_crosses_counter(emg_data[i,:,:], config)
+        rms_values = rms(emg_data[i,:,:])
+        psd = welch_power(emg_data[i,:,:], config)
+        data = np.vstack((zero_crosses, slope_zero_crosses, rms_values, psd)).T
+        df = pd.DataFrame(data, columns=config['emg_features'])
 
     return df
 
@@ -138,7 +138,7 @@ def create_emg_features(config):
             for control in config['control_type']:
                 emg_data = data[subject]['haptic'][hand][control]
                 id = mne.pick_channels(emg_data.ch_names, channels)
-                df = get_emg_feature(emg_data.get_data()[id, :], config)
+                df = get_emg_feature(emg_data.get_data()[:, id, :], config)
                 df['subject'] = subject
                 df['hand_type'] = hand
                 df['control_type'] = control

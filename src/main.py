@@ -24,7 +24,7 @@ with skip_run_code('skip', 'clean_eeg_dataset') as check, check():
     save_with_deepdish(str(save_path), clean_dataset, save=True)
 
 
-with skip_run_code('skip', 'create_haptic_dataset') as check, check():
+with skip_run_code('run', 'create_haptic_dataset') as check, check():
     haptic_dataset = haptic_dataset(config)
     save_path = Path(__file__).parents[1] / config['raw_haptic_dataset']
     save_with_deepdish(str(save_path), haptic_dataset, save=True)

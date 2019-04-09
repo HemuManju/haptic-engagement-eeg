@@ -76,6 +76,9 @@ def get_haptic_emg_data(subject, hand_type, control_type, config):
                 ' desiredPointOnSpline', 'proportionalGain', 'keyPressed']
     dummy = np.genfromtxt(haptic_path, dtype=str,
                           delimiter=';', usecols=0, skip_header=1).tolist()
+    time = np.genfromtxt(haptic_path, dtype=float,
+                         delimiter=';', usecols=1, skip_header=1)
+    sampling_freq = 1 / np.mean(np.diff(time))
     ids = [i for i, x in enumerate(column_name) if x in features]
     haptic_data = np.empty((0, len(dummy)))
     columns = []
@@ -86,7 +89,7 @@ def get_haptic_emg_data(subject, hand_type, control_type, config):
         array = convert_to_array(data)
         haptic_data = np.append(haptic_data, array, axis=0)
 
-    return haptic_data, columns
+    return haptic_data, columns, sampling_freq
 
 
 def create_haptic_emg_epoch(subject, hand_type, control_type, config):
@@ -110,14 +113,15 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
 
     """
 
-    haptic_data, columns = get_haptic_emg_data(
+    haptic_data, columns, sampling_freq = get_haptic_emg_data(
         subject, hand_type, control_type, config)
     id_cursor = columns.index('cursorposition')
     id_desired = columns.index('desiredposition')
     id_gain = columns.index('proportionalgain')
 
     # Calculate the error
-    error = haptic_data[id_cursor*3:id_cursor*3+3,:]-haptic_data[id_desired*3:id_desired*3+3,:]
+    error = haptic_data[id_cursor * 3:id_cursor * 3 + 3, :] - \
+        haptic_data[id_desired * 3:id_desired * 3 + 3, :]
     k = haptic_data[id_gain * 3:id_gain * 3 + 3, :]  # gain
     force = np.multiply(error, k)
 
@@ -132,10 +136,22 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
     force_info = ['force' + x for x in ['_x', '_y', '_z']]
     error_info = ['error' + x for x in ['_x', '_y', '_z']]
     names_info = haptic_info + emg_info + force_info + error_info
-
     info = mne.create_info(ch_names=names_info,
                            ch_types=['misc'] * len(names_info),
-                           sfreq=200.0)
-    epochs = mne.io.RawArray(data, info, verbose=False)
+                           sfreq=sampling_freq)
+    raw = mne.io.RawArray(data, info, verbose=False)
+    events = mne.make_fixed_length_events(
+        raw, duration=config['epoch_length'])
+    epochs = mne.Epochs(raw, events, tmin=0,
+                        tmax=config['epoch_length'], verbose=False, preload=True)
+
+    # Sync with eeg time
+    eeg_epochs = read_eeg_epochs(
+        subject, hand_type, control_type, config)  # eeg file
+    drop_id = [id for id, val in enumerate(eeg_epochs.drop_log) if val]
+    if len(eeg_epochs.drop_log) != len(epochs.drop_log):
+        raise Exception('Two epochs are not of same length!')
+    else:
+        epochs.drop(drop_id)
 
     return epochs

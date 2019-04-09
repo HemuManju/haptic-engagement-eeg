@@ -257,7 +257,7 @@ def read_eeg_epochs(subject, hand_type, control_type, config):
 
     """
     eeg_path = str(Path(__file__).parents[2] / config['clean_eeg_dataset'])
-    data = dd.io.load(eeg_path, group='/' + subject)
-    eeg_epochs = data['eeg'][hand_type][control_type]
+    data = dd.io.load(eeg_path)
+    eeg_epochs = data[subject]['eeg'][hand_type][control_type]
 
     return eeg_epochs
