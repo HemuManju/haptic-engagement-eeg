@@ -8,32 +8,32 @@ from data.clean_eeg_dataset import clean_dataset
 from features.band_power import band_power_dataset
 from features.engagement import engagement_index
 from features.emg_features import create_emg_features
-from features.utils import save_to_r_dataset, read_dataframe_dict
+from features.utils import save_to_r_dataset, read_with_pickle
 
 config = yaml.load(open('config.yml'))
 
 with skip_run_code('skip', 'create_eeg_dataset') as check, check():
     eeg_dataset = eeg_dataset(config)
     save_path = Path(__file__).parents[1] / config['raw_eeg_dataset']
-    save_dataset(str(save_path), eeg_dataset, save=True)
+    save_with_deepdish(str(save_path), eeg_dataset, save=True)
 
 
 with skip_run_code('skip', 'clean_eeg_dataset') as check, check():
     clean_dataset = clean_dataset(config)
     save_path = Path(__file__).parents[1] / config['clean_eeg_dataset']
-    save_dataset(str(save_path), clean_dataset, save=True)
+    save_with_deepdish(str(save_path), clean_dataset, save=True)
 
 
 with skip_run_code('skip', 'create_haptic_dataset') as check, check():
-    clean_dataset = haptic_dataset(config)
+    haptic_dataset = haptic_dataset(config)
     save_path = Path(__file__).parents[1] / config['raw_haptic_dataset']
-    save_dataset(str(save_path), clean_dataset, save=True)
+    save_with_deepdish(str(save_path), haptic_dataset, save=True)
 
 
-with skip_run_code('run', 'create_emg_dataset') as check, check():
+with skip_run_code('skip', 'create_emg_dataset') as check, check():
     emg_dataset = create_emg_features(config)
     save_path = Path(__file__).parents[1] / config['emg_dataset']
-    save_dataframe_dict(str(save_path), emg_dataset, save=True)
+    save_with_pickle(str(save_path), emg_dataset, save=True)
 
 
 with skip_run_code('skip', 'band_power_dataset') as check, check():
@@ -57,9 +57,9 @@ with skip_run_code('skip', 'convert_enagement_to_r_dataset') as check, check():
     save_to_r_dataset(df, str(save_path))
 
 
-with skip_run_code('run', 'convert_emg_to_r_dataset') as check, check():
+with skip_run_code('skip', 'convert_emg_to_r_dataset') as check, check():
     # Read the pandas dataframe
     read_path = Path(__file__).parents[1] / config['emg_dataset']
-    df = read_dataframe_dict(read_path)
+    df = read_with_pickle(read_path)
     save_path = Path(__file__).parents[1] / config['emg_r_dataset']
     save_to_r_dataset(df, str(save_path))

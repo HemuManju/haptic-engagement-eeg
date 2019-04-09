@@ -26,7 +26,7 @@ def read_eeg_epochs(subject, hand_type, control_type, config):
     return eeg_epochs
 
 
-def read_dataset(path):
+def read_with_deepdish(path):
     """Read the hdf5 dataset
 
     Parameters
@@ -62,7 +62,7 @@ def save_to_r_dataset(df, path):
     return None
 
 
-def read_dataframe_dict(path):
+def read_with_pickle(path):
     """save the dataset.
 
     Parameters

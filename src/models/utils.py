@@ -3,7 +3,7 @@ from pathlib import Path
 import pickle
 
 
-def read_dataframe_dict(path):
+def read_with_pickle(path):
     """save the dataset.
 
     Parameters

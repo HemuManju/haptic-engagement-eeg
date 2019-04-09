@@ -8,8 +8,9 @@ library(MASS)
 config <- yaml.load_file('./src/config.yml')
 
 # Read the r dataset
-r_dataset_path <- paste('./',config$r_dataset, sep='')
-df <- read_feather(r_dataset_path)
+eeg_r_dataset_path <- paste('./',config$eeg_r_dataset, sep='')
+df <- read_feather(eeg_r_dataset_path)
+
 
 # Verify the distribution of features 
 feature <- df$beta_alpha_theta

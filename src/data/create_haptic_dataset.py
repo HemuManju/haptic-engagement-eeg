@@ -19,8 +19,8 @@ def haptic_dataset(config):
     """
     haptic_dataset = {}
     def nested_dict(): return collections.defaultdict(nested_dict)
-    data = nested_dict()
     for subject in config['subjects']:
+        data = nested_dict()
         for hand in config['hand_type']:
             for control in config['control_type']:
                 data['haptic'][hand][control] = create_haptic_emg_epoch(

@@ -117,9 +117,8 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
     id_gain = columns.index('proportionalgain')
 
     # Calculate the error
-    error = haptic_data[id_cursor * 3:id_cursor * 3 + 3] - \
-        haptic_data[id_desired * 3:id_desired * 3 + 3]
-    k = haptic_data[id_gain * 3:id_gain * 3 + 3]  # gain
+    error = haptic_data[id_cursor*3:id_cursor*3+3,:]-haptic_data[id_desired*3:id_desired*3+3,:]
+    k = haptic_data[id_gain * 3:id_gain * 3 + 3, :]  # gain
     force = np.multiply(error, k)
 
     # Concatenate with the haptic data
@@ -136,7 +135,7 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
 
     info = mne.create_info(ch_names=names_info,
                            ch_types=['misc'] * len(names_info),
-                           sfreq=50.0)
+                           sfreq=200.0)
     epochs = mne.io.RawArray(data, info, verbose=False)
 
     return epochs

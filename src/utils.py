@@ -60,7 +60,7 @@ def skip_run_code(flag, f):
         pass
 
 
-def save_dataset(path, dataset, save):
+def save_with_deepdish(path, dataset, save):
     """save the dataset.
 
     Parameters
@@ -78,7 +78,7 @@ def save_dataset(path, dataset, save):
     return None
 
 
-def save_dataframe_dict(path, dataframe, save):
+def save_with_pickle(path, dataframe, save):
     """save the dataset.
 
     Parameters

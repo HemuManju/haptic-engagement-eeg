@@ -3,7 +3,7 @@ import pandas as pd
 import mne
 from pathlib import Path
 from scipy.signal import welch
-from .utils import read_dataframe_dict, read_dataset
+from .utils import read_with_pickle, read_with_deepdish
 
 
 def zero_crosses_counter(emg_data, config):
@@ -110,7 +110,6 @@ def get_emg_feature(emg_data, config):
     rms_values = rms(emg_data)
     psd = welch_power(emg_data, config)
     data = np.vstack((zero_crosses, slope_zero_crosses, rms_values, psd)).T
-
     df = pd.DataFrame(data, columns=config['emg_features'])
 
     return df
@@ -131,8 +130,8 @@ def create_emg_features(config):
 
     """
     read_path = Path(__file__).parents[2] / config['raw_haptic_dataset']
-    data = read_dataset(read_path)
-    emg_feature = pd.DataFrame(np.empty((0,len(config['emg_features']))), columns=config['emg_features'])
+    data = read_with_deepdish(read_path)
+    emg_feature = pd.DataFrame(np.empty((0, len(config['emg_features']))), columns=config['emg_features'])
     channels = ['emg_0', 'emg_1', 'emg_2', 'emg_3', 'emg_4', 'emg_5', 'emg_6', 'emg_7']
     for subject in config['subjects']:
         for hand in config['hand_type']:

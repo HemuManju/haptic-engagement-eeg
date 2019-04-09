@@ -12,8 +12,7 @@ emg_features:             ['zero_crosses', 'slope_zero_crosses', 'rms', 'psd']
 ##---------------------------------------------------------------------##
 # Experiment 0
 # All subjects are used for training and testing
-subjects:                 ['8801', '8802', '8808', '8815', '8816', '8819', '8820',
-'8823', '8827', '8830']
+subjects:                 ['8801', '8802', '8808', '8815', '8816', '8819', '8820', '8823', '8827', '8830']
 test_subjects:            []
 hand_type:                ['dominant', 'non_dominant']
 control_type:             ['no_force', 'error_reduction', 'error_augmentation']

@@ -36,7 +36,7 @@ df$control_type[0]
 
 control_type <- df$control_type
 # Linear mixed models
-fit.model <- lmer(response ~ factor + (1 | df$subject) + (1 | df$hand_type), 
+fit.model <- lmer(response ~ control_type + (1 | df$subject) + (1 | df$hand_type), 
                          data = df)
 summary(fit.model)
 #-----------------------------------------------------------------------
