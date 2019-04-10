@@ -11,12 +11,13 @@ config <- yaml.load_file("./src/config.yml")
 emg_r_dataset_path <- paste("./", config$emg_r_dataset, sep = "")
 df <- read_feather(emg_r_dataset_path)
 df <- na.omit(df)
+df
 #-----------------------------------------------------------------------
 # As factor
 df$control_type <- as.factor(df$control_type)
 df$hand_type <- as.factor(df$hand_type)
 df$subject <- as.factor(df$subject)
-
+df
 #-----------------------------------------------------------------------
 response <- df$slope_zero_crosses
 

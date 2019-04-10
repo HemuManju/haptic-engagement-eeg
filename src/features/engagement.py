@@ -21,10 +21,10 @@ def calculate_engagement_index(data, config):
     """
 
     # Feature Beta/(Alpha + Theta)
-    num_bands = ['total_Beta']
-    num_electrodes = ['POz','Fz','Cz','C3','C4','F3','F4','P3','P4']
+    num_bands = ['lower_Beta']
+    num_electrodes = ['POz','Cz','P3','P4']
     den_bands = ['Theta', 'total_Alpha']
-    den_electrodes = ['POz','Fz','Cz','C3','C4','F3','F4','P3','P4']
+    den_electrodes = ['POz','Cz','P3','P4']
     numerator_features = [electrode + '_' + band for electrode in num_electrodes for band in num_bands]
     denominator_features = [electrode + '_' + band for electrode in den_electrodes for band in den_bands]
     alpha = [col for col in data[denominator_features].columns if 'Alpha' in col]
@@ -47,7 +47,7 @@ def calculate_engagement_index(data, config):
     theta = data[numerator_features].mean(axis = 1)
 
     # Feature 1/Alpha
-    den_bands = ['lower_Alpha']
+    den_bands = ['total_Alpha']
     den_electrodes = ['P3','POz','P4']
     denominator_features = [electrode + '_' + band for electrode in den_electrodes for band in den_bands]
     alpha_1 = 1/data[denominator_features].mean(axis = 1)
@@ -62,10 +62,10 @@ def calculate_engagement_index(data, config):
     beta_theta = data[numerator_features].mean(axis = 1)/data[denominator_features].mean(axis = 1)
 
     # Feature selection Beta/Alpha
-    num_bands = [ 'total_Beta']
-    num_electrodes = ['P3','POz','P4']
-    den_bands = ['lower_Alpha']
-    den_electrodes = ['P3','POz','P4']
+    num_bands = ['lower_Beta']
+    num_electrodes = ['POz','Cz','P3','P4']
+    den_bands = ['total_Alpha']
+    den_electrodes = ['POz','Cz','P3','P4']
     numerator_features = [electrode + '_' + band for electrode in num_electrodes for band in num_bands]
     denominator_features = [electrode + '_' + band for electrode in den_electrodes for band in den_bands]
     beta_alpha = data[numerator_features].mean(axis = 1)/data[denominator_features].mean(axis = 1)
@@ -97,7 +97,7 @@ def engagement_index(subjects, hand_type, control_type, config):
     """
 
     read_path = Path(__file__).parents[2] / config['band_power_dataset']
-    data = read_dataframe_dict(read_path)
+    data = read_with_pickle(read_path)
     engagement_index = pd.DataFrame(np.empty((0,len(config['features']))), columns=config['features'])
     for subject in subjects:
         subject_data = data[subject]
