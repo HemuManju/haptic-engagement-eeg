@@ -1,5 +1,5 @@
 import numpy as np
-from mne.time_frequency import psd_multitaper
+from mne.time_frequency import psd_multitaper, psd_welch
 import pandas as pd
 import mne
 from .utils import read_eeg_epochs
@@ -26,7 +26,8 @@ def get_band_power(subject, hand_type, control_type, config):
     epochs = read_eeg_epochs(subject, hand_type, control_type, config)
     picks = mne.pick_types(epochs.info, eeg=True)
     ch_names = epochs.ch_names[picks[0]:picks[-1]+1]
-    psds, freqs = psd_multitaper(epochs, fmin=1.0, fmax=45.0, picks=picks, n_jobs=6)
+    psds, freqs = psd_multitaper(epochs, fmin=1.0, fmax=64.0, picks=picks, n_jobs=6, verbose=False)
+
     # Normalize the PSDs
     psds /= np.sum(psds, axis=-1, keepdims=True)
 

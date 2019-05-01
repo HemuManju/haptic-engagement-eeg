@@ -184,32 +184,6 @@ def get_eeg_data(subject, hand_type):
     return raw_selected
 
 
-def create_eeg_epochs(subject, hand_type, preload=True):
-    """Get the epcohed eeg data excluding unnessary channels from fif file and also filter the signal.
-
-    Parameter
-    ----------
-    subject : string of subject ID e.g. 7707
-    trial   : HighFine, HighGross, LowFine, LowGross
-
-    Returns
-    ----------
-    epochs  : epoched data
-
-    """
-    raw = get_eeg_data(subject, hand_type)
-    raw.notch_filter(60, filter_length='auto',
-                     phase='zero', verbose=False)  # Line noise
-    raw.filter(l_freq=1, h_freq=50, fir_design='firwin',
-               verbose=False)  # Band pass filter
-    raw.set_eeg_reference('average')
-    events = mne.make_fixed_length_events(raw, duration=config['epoch_length'])
-    epochs = mne.Epochs(raw, events, tmin=0,
-                        tmax=config['epoch_length'], verbose=False, preload=preload)
-
-    return epochs
-
-
 def create_eeg_epochs(subject, hand_type, control_type, config, preload=True):
     """Get the epcohed eeg data excluding unnessary channels from fif file and also filter the signal.
 
@@ -230,7 +204,7 @@ def create_eeg_epochs(subject, hand_type, control_type, config, preload=True):
                      phase='zero', verbose=False)  # Line noise
     raw.filter(l_freq=1, h_freq=50, fir_design='firwin',
                verbose=False)  # Band pass filter
-    raw.set_eeg_reference('average')
+    # raw.set_eeg_reference('average')
     raw_selected = raw.copy().crop(tmin=trial_start, tmax=trial_end)
     events = mne.make_fixed_length_events(
         raw_selected, duration=config['epoch_length'])

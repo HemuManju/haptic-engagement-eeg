@@ -62,7 +62,7 @@ def append_eog_index(epochs, ica):
     return ica
 
 
-def clean_with_ica(epochs, show_ica=False):
+def clean_with_ica(epochs, subject, hand, control, config, show_ica=False):
     """Clean epochs with ICA.
 
     Parameter
@@ -80,14 +80,22 @@ def clean_with_ica(epochs, show_ica=False):
     ica = mne.preprocessing.ICA(n_components=None,
                                 method="picard", verbose=False)
     # Get the rejection threshold using autoreject
-    reject_threshold = get_rejection_threshold(epochs)
-    ica.fit(epochs, picks=picks, reject=reject_threshold)
+    if config['use_previous_ica']:
+        read_path = Path(__file__).parents[2] / config['previous_ica']
+        data = data = dd.io.load(str(read_path))
+        ica_previous = data[subject]['ica'][hand][control]
+        ica_previous.apply(epochs)
+    else:
+        reject_threshold = get_rejection_threshold(epochs)
+        ica.fit(epochs, picks=picks, reject=reject_threshold)
+        # mne pipeline to detect artifacts
+        ica = append_eog_index(epochs, ica)
+        ica.detect_artifacts(epochs, eog_criterion=range(2))
+        ica.apply(epochs)  # Apply the ICA
 
-    # mne pipeline to detect artifacts
-    ica.detect_artifacts(epochs, eog_criterion=range(2))
     if show_ica:
         ica.plot_components(inst=epochs)
-    ica.apply(epochs)  # Apply the ICA
+
 
     return epochs, ica
 
@@ -114,9 +122,9 @@ def clean_dataset(config):
         for hand in config['hand_type']:
             for control in config['control_type']:
                 epochs = raw_eeg[subject]['eeg'][hand][control]
-                ica_epochs, ica = clean_with_ica(epochs)
+                ica_epochs, ica = clean_with_ica(epochs, subject, hand, control, config)
                 repaired_eeg = autoreject_repair_epochs(ica_epochs)
-                data['eeg'][hand][control] = ica_epochs
+                data['eeg'][hand][control] = repaired_eeg
                 data['ica'][hand][control] = ica
         clean_eeg_dataset[subject] = data
 

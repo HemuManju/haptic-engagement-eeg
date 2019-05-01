@@ -3,71 +3,10 @@ import pandas as pd
 import mne
 from pathlib import Path
 from scipy.signal import welch
-from .utils import read_with_pickle, read_with_deepdish
+from .utils import read_with_pickle, read_with_deepdish, compute_zero_crossings, compute_svd_entropy
 
 
-def zero_crosses_counter(emg_data, config):
-    """Number of zero crossing form the EMG data
-
-    Parameters
-    ----------
-    emg_data : array
-        An array of EMG data.
-
-    Returns
-    -------
-    int
-        Number of zeros crosses of all 8 channels.
-
-    """
-    zero_crosses = []
-    for channel in range(config['n_emg_electrodes']):
-        change_id = np.where(np.diff(np.sign(emg_data[channel,:])))[0]
-        zero_crosses.append(len(change_id))
-
-    return np.asarray(zero_crosses)
-
-
-def slope_zero_crosses_counter(emg_data, config):
-    """Number of zero crossing form the EMG data
-
-    Parameters
-    ----------
-    emg_data : array
-        An array of EMG data.
-
-    Returns
-    -------
-    int
-        Number of zeros crosses of all 8 channels.
-
-    """
-    diff =  np.diff(emg_data, axis=1)
-    slope_zero_crosses = zero_crosses_counter(diff, config)
-
-    return slope_zero_crosses
-
-
-def rms(emg_data):
-    """RMS value of each channles EMG data.
-
-    Parameters
-    ----------
-    emg_data : array
-        An array of EMG data.
-
-    Returns
-    -------
-    int
-        Number of zeros crosses of all 8 channels.
-
-    """
-    rms = np.sqrt(np.sum(emg_data**2, axis=1)/emg_data.shape[1])
-
-    return rms
-
-
-def welch_power(emg_data, config):
+def svd_entropy(emg_data):
     """Get the fft value of emg signal from 8 electrodes.
 
     Parameters
@@ -81,11 +20,9 @@ def welch_power(emg_data, config):
         Number of zeros crosses of all 8 channels.
 
     """
-    psd = np.zeros((config['n_emg_electrodes'], config['emg_s_freq']//2 + 1))
-    for channel in range(config['n_emg_electrodes']):
-        f, psd[channel, :] = welch(emg_data[channel, :], fs=config['emg_s_freq'], nperseg=config['emg_s_freq']//2, nfft=config['emg_s_freq'], detrend=False)
+    svd = compute_svd_entropy(emg_data)
 
-    return psd.mean(axis=1)
+    return svd
 
 
 def get_emg_feature(emg_data, config):
@@ -104,13 +41,17 @@ def get_emg_feature(emg_data, config):
         An array of calculated emg features.
 
     """
+    df = pd.DataFrame(np.empty((0, len(config['emg_features']))), columns=config['emg_features'])
     for i in range(emg_data.shape[0]):
-        zero_crosses = zero_crosses_counter(emg_data[i,:,:], config)
-        slope_zero_crosses = slope_zero_crosses_counter(emg_data[i,:,:], config)
-        rms_values = rms(emg_data[i,:,:])
-        psd = welch_power(emg_data[i,:,:], config)
-        data = np.vstack((zero_crosses, slope_zero_crosses, rms_values, psd)).T
-        df = pd.DataFrame(data, columns=config['emg_features'])
+        zero_crosses = np.mean(compute_zero_crossings(emg_data[i,:,:]))
+        diff =  np.diff(emg_data[i,:,:], axis=1)
+        slope_zero_crosses = np.mean(compute_zero_crossings(diff))
+        svd = np.mean(svd_entropy(emg_data[i,:,:]))
+        rms = np.sqrt(np.sum(emg_data[i,:,:]**2, axis=1)/emg_data[i,:,:].shape[1])
+        rms = np.mean(rms)
+        data = np.vstack((zero_crosses, slope_zero_crosses, svd, rms)).T
+        temp = pd.DataFrame(data, columns=config['emg_features'])
+        df =  pd.concat([df, temp], ignore_index=True, sort=False)
 
     return df
 

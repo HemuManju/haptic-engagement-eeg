@@ -12,8 +12,13 @@ eeg_r_dataset_path <- paste('./',config$eeg_r_dataset, sep='')
 df <- read_feather(eeg_r_dataset_path)
 
 
+
 # Verify the distribution of features 
-feature <- df$beta_alpha_theta
+feature <- df$beta_theta
+qqp(feature, "lnorm")
+
+gamma <- fitdistr(feature, "gamma")
+qqp(feature, "gamma", shape = gamma$estimate[[1]], rate = gamma$estimate[[2]])
 
 fit.weibull <- fitdist(feature, "weibull")
 fit.norm <- fitdist(feature, "norm")

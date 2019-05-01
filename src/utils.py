@@ -1,4 +1,5 @@
 import yaml
+import feather
 import deepdish as dd
 from pathlib import Path
 from contextlib import contextmanager

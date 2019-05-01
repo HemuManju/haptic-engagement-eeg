@@ -1,0 +1,63 @@
+---
+title: "eeg_statistical_analysis"
+---
+```{r Initialization}
+library(yaml)
+library(feather)
+library(lme4)
+library(simr)
+library(here)
+
+# Read the configuration file
+config <- yaml.load_file("../config.yml")
+
+eeg_r_dataset_path <- here(config$eeg_r_dataset)
+df <- read_feather(eeg_r_dataset_path)
+df <- na.omit(df)
+config$epoch_length
+
+# Convert to factor
+df$control_type <- as.factor(df$control_type)
+df$hand_type <- as.factor(df$hand_type)
+df$subject <- as.factor(df$subject)
+# The dataframe
+df
+```
+
+```{r Prior analysis}
+response <- df$beta_alpha_theta
+df$hand_type <- relevel(df$hand_type, "dominant")
+engagement.model <- glmer(response ~ 1 + (1 | df$hand_type), data = df, family = Gamma(link = log))
+summary(engagement.model)
+```
+
+
+```{r Linear model 1 with both dominant and non_dominant hand type}
+response <- df$beta_alpha_theta
+df$control_type <- relevel(df$control_type, "no_force")
+df$hand_type <- relevel(df$hand_type, "dominant")
+model1 <- glmer(response ~ control_type + (1 | subject),
+               data = df, family = Gamma(link = log))
+summary(model1)
+```
+
+
+```{r Linear model 2 using only dominant hand}
+df_dominant <- df[df[, 'hand_type'] == 'dominant',]
+df_dominant
+response <- df_dominant$beta_alpha_theta
+df_dominant$control_type <- relevel(df_dominant$control_type, "no_force")
+model2 <- glmer(response ~ control_type + (1 | subject),
+               data = df_dominant, family = Gamma(link = log))
+summary(model2)
+```
+
+
+```{r Linear model 3 using only non dominant hand}
+df_non_dominant <-  df[df[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$beta_alpha_theta
+df_non_dominant$control_type <- relevel(df_non_dominant$control_type, "no_force")
+model3 <- glmer(response ~ control_type + (1 | subject),
+               data = df_non_dominant, family = Gamma(link = log))
+summary(model3)
+```

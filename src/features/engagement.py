@@ -22,9 +22,9 @@ def calculate_engagement_index(data, config):
 
     # Feature Beta/(Alpha + Theta)
     num_bands = ['lower_Beta']
-    num_electrodes = ['POz','Cz','P3','P4']
+    num_electrodes = ['POz', 'Fz', 'Cz', 'C3', 'C4', 'F3', 'F4', 'P3', 'P4']
     den_bands = ['Theta', 'total_Alpha']
-    den_electrodes = ['POz','Cz','P3','P4']
+    den_electrodes = ['POz', 'Fz', 'Cz', 'C3', 'C4', 'F3', 'F4', 'P3', 'P4']
     numerator_features = [electrode + '_' + band for electrode in num_electrodes for band in num_bands]
     denominator_features = [electrode + '_' + band for electrode in den_electrodes for band in den_bands]
     alpha = [col for col in data[denominator_features].columns if 'Alpha' in col]
