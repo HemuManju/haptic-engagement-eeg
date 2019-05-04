@@ -13,7 +13,7 @@ from features.utils import save_to_r_dataset, read_with_pickle
 config = yaml.load(open('config.yml'))
 
 
-with skip_run_code('run', 'create_eeg_dataset') as check, check():
+with skip_run_code('skip', 'create_eeg_dataset') as check, check():
     eeg_dataset = eeg_dataset(config)
     save_path = Path(__file__).parents[1] / config['raw_eeg_dataset']
     save_with_deepdish(str(save_path), eeg_dataset, save=True)

@@ -20,44 +20,48 @@ config$epoch_length
 df$control_type <- as.factor(df$control_type)
 df$hand_type <- as.factor(df$hand_type)
 df$subject <- as.factor(df$subject)
-# The dataframe
-df
+```
+```{r Response}
+response <- df$beta_theta
+df['output'] <- response
 ```
 
+
 ```{r Prior analysis}
-response <- df$beta_alpha_theta
 df$hand_type <- relevel(df$hand_type, "dominant")
 engagement.model <- glmer(response ~ 1 + (1 | df$hand_type), data = df, family = Gamma(link = log))
 summary(engagement.model)
 ```
 
-
 ```{r Linear model 1 with both dominant and non_dominant hand type}
-response <- df$beta_alpha_theta
+response <- df$output
 df$control_type <- relevel(df$control_type, "no_force")
 df$hand_type <- relevel(df$hand_type, "dominant")
 model1 <- glmer(response ~ control_type + (1 | subject),
-               data = df, family = Gamma(link = log))
+               data = df, family = gaussian(link = log))
 summary(model1)
 ```
 
-
 ```{r Linear model 2 using only dominant hand}
 df_dominant <- df[df[, 'hand_type'] == 'dominant',]
-df_dominant
-response <- df_dominant$beta_alpha_theta
-df_dominant$control_type <- relevel(df_dominant$control_type, "no_force")
+response <- df_dominant$output
 model2 <- glmer(response ~ control_type + (1 | subject),
-               data = df_dominant, family = Gamma(link = log))
+               data = df_dominant, family = gaussian(link = log))
 summary(model2)
 ```
 
-
 ```{r Linear model 3 using only non dominant hand}
 df_non_dominant <-  df[df[, 'hand_type'] == 'non_dominant',]
-response <- df_non_dominant$beta_alpha_theta
-df_non_dominant$control_type <- relevel(df_non_dominant$control_type, "no_force")
+response <- df_non_dominant$output
 model3 <- glmer(response ~ control_type + (1 | subject),
-               data = df_non_dominant, family = Gamma(link = log))
+               data = df_non_dominant, family = gaussian(link = log))
 summary(model3)
 ```
+
+```{r Power analysis}
+model4 <- model3
+fixef(model4)["control_typeerror_augmentation"]
+fixef(model4)["control_typeerror_augmentation"] <- 0.05
+powerSim(model4, nsim = 10)
+```
+

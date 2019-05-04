@@ -26,14 +26,10 @@ def get_band_power(subject, hand_type, control_type, config):
     epochs = read_eeg_epochs(subject, hand_type, control_type, config)
     picks = mne.pick_types(epochs.info, eeg=True)
     ch_names = epochs.ch_names[picks[0]:picks[-1]+1]
-    psds, freqs = psd_multitaper(epochs, fmin=1.0, fmax=64.0, picks=picks, n_jobs=6, verbose=False)
-
-    # Normalize the PSDs
-    psds /= np.sum(psds, axis=-1, keepdims=True)
+    psds, freqs = psd_multitaper(epochs, fmin=1.0, fmax=64.0, picks=picks, n_jobs=6, verbose=False, normalization='full')
 
     psd_band = []
     for freq_band in config['freq_bands']:
-        temp = psds[:, :, (freqs >= freq_band[0]) & (freqs < freq_band[1])]
         psd_band.append(psds[:, :, (freqs >= freq_band[0]) & (freqs < freq_band[1])].mean(axis=-1))
     # Form pandas dataframe
     data = np.concatenate(psd_band, axis=1)
@@ -44,7 +40,6 @@ def get_band_power(subject, hand_type, control_type, config):
     df['control_type'] = control_type
 
     return df
-
 
 
 def band_power_dataset(config):

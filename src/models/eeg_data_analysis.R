@@ -14,7 +14,7 @@ df <- read_feather(eeg_r_dataset_path)
 
 
 # Verify the distribution of features 
-feature <- df$beta_theta
+feature <- df$theta_alpha
 qqp(feature, "lnorm")
 
 gamma <- fitdistr(feature, "gamma")

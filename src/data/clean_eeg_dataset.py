@@ -89,7 +89,7 @@ def clean_with_ica(epochs, subject, hand, control, config, show_ica=False):
         reject_threshold = get_rejection_threshold(epochs)
         ica.fit(epochs, picks=picks, reject=reject_threshold)
         # mne pipeline to detect artifacts
-        ica = append_eog_index(epochs, ica)
+        # ica = append_eog_index(epochs, ica)
         ica.detect_artifacts(epochs, eog_criterion=range(2))
         ica.apply(epochs)  # Apply the ICA
 
