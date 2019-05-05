@@ -19,7 +19,7 @@ with skip_run_code('skip', 'create_eeg_dataset') as check, check():
     save_with_deepdish(str(save_path), eeg_dataset, save=True)
 
 
-with skip_run_code('run', 'clean_eeg_dataset') as check, check():
+with skip_run_code('skip', 'clean_eeg_dataset') as check, check():
     clean_dataset = clean_dataset(config)
     save_path = Path(__file__).parents[1] / config['clean_eeg_dataset']
     save_with_deepdish(str(save_path), clean_dataset, save=True)
@@ -37,13 +37,13 @@ with skip_run_code('skip', 'emg_features') as check, check():
     save_with_pickle(str(save_path), emg_dataset, save=True)
 
 
-with skip_run_code('run', 'band_power') as check, check():
+with skip_run_code('skip', 'band_power') as check, check():
     band_power_dataset = band_power_dataset(config)
     save_path = Path(__file__).parents[1] / config['band_power_dataset']
     save_with_pickle(str(save_path), band_power_dataset, save=True)
 
 
-with skip_run_code('run', 'engagement_index') as check, check():
+with skip_run_code('skip', 'engagement_index') as check, check():
     engagement_index_dataset = engagement_index(
         config['subjects'], config['hand_type'], config['control_type'], config)
     save_path = Path(__file__).parents[1] / config['engagement_index_dataset']

@@ -10,54 +10,54 @@ band_names:               ['Theta', 'lower_Alpha', 'higher_Alpha', 'total_Alpha'
 features:                 ['beta_alpha_theta', 'theta_alpha','theta','1_alpha', 'beta_theta', 'beta_alpha']
 emg_features:             ['zero_crosses', 'slope_zero_crosses', 'svd', 'rms']
 ##---------------------------------------------------------------------##
-# # Experiment 0
-# # EEG parameters
-# epoch_length:             2
-# # All subjects are used for training and testing
-# subjects:                 ['8801', '8802', '8808', '8815', '8816', '8819', '8820', '8823', '8827', '8830']
-# test_subjects:            []
-# hand_type:                ['dominant', 'non_dominant']
-# control_type:             ['no_force', 'error_reduction', 'error_augmentation']
-# use_previous_ica:         False
-#
-# # Path
-# raw_eeg_path:             'data/raw/eeg_data/'
-# raw_haptic_path:          'data/raw/haptic_data/'
-# raw_eeg_dataset:          'data/interim/raw_eeg_exp_0_dataset.h5'
-# clean_eeg_dataset:        'data/interim/clean_eeg_exp_0_dataset.h5'
-# eeg_haptic_dataset:       'data/processed/eeg_haptic_exp_0_dataset.h5'
-# band_power_dataset:       'data/processed/band_power_exp_0_dataset.pkl'
-# emg_dataset:              'data/processed/emg_exp_0_dataset.pkl'
-# engagement_index_dataset: 'data/processed/engagement_index_exp_0_dataset.pkl'
-# eeg_r_dataset:            'data/r_data/eeg_r_exp_0_dataset.RData'
-# emg_r_dataset:            'data/r_data/emg_r_exp_0_dataset.RData'
-# raw_haptic_dataset:       'data/interim/raw_haptic_exp_0_dataset.h5'
-# trained_model_path:       'models/experiment_0'
+# Experiment 0
+# EEG parameters
+epoch_length:             2
+# All subjects are used for training and testing
+subjects:                 ['8801', '8802', '8808', '8815', '8816', '8819', '8820', '8823', '8827', '8830']
+test_subjects:            []
+hand_type:                ['dominant', 'non_dominant']
+control_type:             ['no_force', 'error_reduction', 'error_augmentation']
+use_previous_ica:         False
+
+# Path
+raw_eeg_path:             'data/raw/eeg_data/'
+raw_haptic_path:          'data/raw/haptic_data/'
+raw_eeg_dataset:          'data/interim/raw_eeg_exp_0_dataset.h5'
+clean_eeg_dataset:        'data/interim/clean_eeg_exp_0_dataset.h5'
+eeg_haptic_dataset:       'data/processed/eeg_haptic_exp_0_dataset.h5'
+band_power_dataset:       'data/processed/band_power_exp_0_dataset.pkl'
+emg_dataset:              'data/processed/emg_exp_0_dataset.pkl'
+engagement_index_dataset: 'data/processed/engagement_index_exp_0_dataset.pkl'
+eeg_r_dataset:            'data/r_data/eeg_r_exp_0_dataset.RData'
+emg_r_dataset:            'data/r_data/emg_r_exp_0_dataset.RData'
+raw_haptic_dataset:       'data/interim/raw_haptic_exp_0_dataset.h5'
+trained_model_path:       'models/experiment_0'
 ##---------------------------------------------------------------------##
 # Experiment 1
 # EEG parameters
-epoch_length:           4
-# All subjects are used for training and testing
-subjects:               ['8801', '8802', '8808', '8815', '8816', '8819', '8820', '8823', '8827', '8830']
-test_subjects:          []
-hand_type:              ['dominant', 'non_dominant']
-control_type:           ['no_force', 'error_reduction', 'error_augmentation']
-use_previous_ica:       True
-
-# Path
-raw_eeg_path:           'data/raw/eeg_data/'
-raw_haptic_path:        'data/raw/haptic_data/'
-raw_eeg_dataset:        'data/interim/raw_eeg_exp_1_dataset.h5'
-previous_ica:           'data/interim/clean_eeg_exp_0_dataset.h5'
-clean_eeg_dataset:      'data/interim/clean_eeg_exp_1_dataset.h5'
-eeg_haptic_dataset:     'data/processed/eeg_haptic_exp_1_dataset.h5'
-band_power_dataset:     'data/processed/band_power_exp_1_dataset.pkl'
-emg_dataset:            'data/processed/emg_exp_1_dataset.pkl'
-engagement_index_dataset: 'data/processed/engagement_index_exp_1_dataset.pkl'
-eeg_r_dataset:          'data/r_data/eeg_r_exp_1_dataset.RData'
-emg_r_dataset:          'data/r_data/emg_r_exp_1_dataset.RData'
-raw_haptic_dataset:     'data/interim/raw_haptic_exp_1_dataset.h5'
-trained_model_path:     'models/experiment_1'
+# epoch_length:           4
+# # All subjects are used for training and testing
+# subjects:               ['8801', '8802', '8808', '8815', '8816', '8819', '8820', '8823', '8827', '8830']
+# test_subjects:          []
+# hand_type:              ['dominant', 'non_dominant']
+# control_type:           ['no_force', 'error_reduction', 'error_augmentation']
+# use_previous_ica:       True
+#
+# # Path
+# raw_eeg_path:           'data/raw/eeg_data/'
+# raw_haptic_path:        'data/raw/haptic_data/'
+# raw_eeg_dataset:        'data/interim/raw_eeg_exp_1_dataset.h5'
+# previous_ica:           'data/interim/clean_eeg_exp_0_dataset.h5'
+# clean_eeg_dataset:      'data/interim/clean_eeg_exp_1_dataset.h5'
+# eeg_haptic_dataset:     'data/processed/eeg_haptic_exp_1_dataset.h5'
+# band_power_dataset:     'data/processed/band_power_exp_1_dataset.pkl'
+# emg_dataset:            'data/processed/emg_exp_1_dataset.pkl'
+# engagement_index_dataset: 'data/processed/engagement_index_exp_1_dataset.pkl'
+# eeg_r_dataset:          'data/r_data/eeg_r_exp_1_dataset.RData'
+# emg_r_dataset:          'data/r_data/emg_r_exp_1_dataset.RData'
+# raw_haptic_dataset:     'data/interim/raw_haptic_exp_1_dataset.h5'
+# trained_model_path:     'models/experiment_1'
 #---------------------------------------------------------------------##
 # # Experiment 2
 # # EEG parameters

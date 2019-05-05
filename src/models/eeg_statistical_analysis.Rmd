@@ -10,6 +10,7 @@ library(simr)
 library(here)
 library(sjPlot)
 library(sjmisc)
+library(stargazer)
 
 
 # Read the configuration file
@@ -77,13 +78,12 @@ summary(model3)
 
 ```{r Plotting}
 # theme_set(theme_bw(base_size = 10))
-# qplot(control_type, response, facets = . ~ subject, 
-#       colour = subject, geom = "boxplot", data = df_non_dominant)
+qplot(control_type, response, facets = . ~ subject,
+      colour = subject, geom = "boxplot", data = df_non_dominant)
 # # plot_model(model3, type = "re", show.values = TRUE, value.offset = .4)
 ```
 
-```{r}
-tab_model(model3)
-
+```{r df_non_dominant, results='asis'}
+tab_model(model2, title="Regression results under dominant hand")
 ```
 

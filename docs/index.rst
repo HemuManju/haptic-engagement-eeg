@@ -12,8 +12,10 @@ Contents:
    :maxdepth: 2
 
    getting-started
-   commands
-
+   source/data/
+   source/features
+   source/models
+   source/visualization
 
 
 Indices and tables
