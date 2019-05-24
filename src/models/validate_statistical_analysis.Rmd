@@ -1,0 +1,67 @@
+---
+title: "validate_statistical_analysis"
+---
+```{r Initialization}
+rm(list=ls())
+
+library(yaml)
+library(ggplot2)
+library(feather)
+library(lme4)
+library(simr)
+library(here)
+library(sjPlot)
+library(sjmisc)
+library(stargazer)
+library(ggpubr)
+library(car)
+library(fitdistrplus)
+library(MASS)
+
+# Read the configuration file
+config <- yaml.load_file("../config.yml")
+
+validate_r_dataset_path <- here(config$validate_r_dataset)
+df <- read_feather(validate_r_dataset_path)
+df <- na.omit(df)
+config$epoch_length
+
+# Convert to factor
+df$engagement_level <- as.factor(df$engagement_level)
+df$subject <- as.factor(df$subject)
+```
+```{r Response}
+response <- df$'1_alpha'
+df['output'] <- response
+```
+
+```{r Distribution analysis}
+feature <- df$output
+qqp(feature, "norm")
+qqp(feature, "lnorm")
+
+
+gamma <- fitdistr(feature, "gamma")
+qqp(feature, "gamma", shape = gamma$estimate[[1]], rate = gamma$estimate[[2]])
+
+fit.weibull <- fitdist(feature, "weibull")
+fit.norm <- fitdist(feature, "norm")
+fit.gamma <- fitdist(feature, "gamma")
+fit.lnorm <- fitdist(feature, "lnorm")
+
+# # Verify the best fit of data
+descdist(feature, discrete = FALSE)
+fit.norm$aic
+fit.weibull$aic
+fit.lnorm$aic
+fit.gamma$aic
+```
+
+```{r Linear model 1 with high and low engagement}
+response <- df$output
+df$engagement_level <- relevel(df$engagement_level, "low")
+model1 <- glmer(response ~ engagement_level + (1 | subject),
+               data = df, family = Gamma(link=log))
+summary(model1)
+```
+

@@ -80,6 +80,20 @@ def save_with_deepdish(path, dataset, save):
     return None
 
 
+def read_with_deepdish(path):
+    """Read the dataset.
+
+    Parameters
+    ----------
+    path : str
+        path to read from.
+
+    """
+    dataset = dd.io.load(path)
+
+    return dataset
+
+
 def save_with_pickle(path, dataframe, save):
     """save the dataset.
 

@@ -118,17 +118,13 @@ def calculate_engagement_index(data, config):
     return df
 
 
-def engagement_index(subjects, hand_type, control_type, config):
+def validate_engagement_index(config):
     """Enagement index of subjects and hand_type.
 
     Parameters
     ----------
-    subjects : list
-        List of all the subjects.
-    hand_type : list
-        List of hand types dominant or non-dominant.
     config : yaml
-        The configuration file.
+        Configuration file.
 
     Returns
     -------
@@ -136,24 +132,26 @@ def engagement_index(subjects, hand_type, control_type, config):
         Description of returned object.
 
     """
+    engagement_levels = ['high', 'low']
+    read_path = Path(__file__).parents[2] / config['index_validation_path']
+    data = pd.read_excel(read_path)
+    # Replace engagement level in dataframe
+    data['engagement_level'].replace(1, 'high', inplace=True)
+    data['engagement_level'].replace(0, 'low', inplace=True)
 
-    read_path = Path(__file__).parents[2] / config['band_power_dataset']
-    data = read_with_pickle(read_path)
-    engagement_index = pd.DataFrame(np.empty((0, len(config['features']))),
+    index_validation = pd.DataFrame(np.empty((0, len(config['features']))),
                                     columns=config['features'])
-    for subject in subjects:
-        subject_data = data[subject]
-        for hand in hand_type:
-            hand_data = subject_data[subject_data['hand_type'] == hand]
-            for control in control_type:
-                control_data = hand_data[hand_data['control_type'] == control]
-                df = calculate_engagement_index(control_data, config)
-                df['subject'] = subject
-                df['hand_type'] = hand
-                df['control_type'] = control
+    for i in range(25):
+        subject_data = data[data['subject'] == i + 1]
+        for level in engagement_levels:
+            temp_data = subject_data[subject_data['engagement_level'] == level]
+            # Cleaning
+            temp_data.dropna()
 
-                engagement_index = pd.concat([engagement_index, df],
-                                             ignore_index=True,
-                                             sort=False)
-
-    return engagement_index
+            df = calculate_engagement_index(temp_data, config)
+            df['subject'] = int(i + 1)
+            df['engagement_level'] = level
+            index_validation = pd.concat([index_validation, df],
+                                         ignore_index=True,
+                                         sort=False)
+    return index_validation

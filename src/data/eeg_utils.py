@@ -12,9 +12,9 @@ from autoreject import get_rejection_threshold
 import yaml
 import deepdish as dd
 
-
 # Import configuration
-config = yaml.load(open(str(Path(__file__).parents[1]) + '/config.yml'))
+config = yaml.load(open(str(Path(__file__).parents[1]) + '/config.yml'),
+                   Loader=yaml.FullLoader)
 
 
 def get_eeg_path(subject, hand_type, raw=True):
@@ -68,8 +68,8 @@ def get_eeg_time(subject, hand_type):
     # EEG time
     eeg_path = get_eeg_path(subject, hand_type)
     eeg_time = eeg_path.split('.')
-    eeg_time = datetime.strptime(
-        ''.join(eeg_time[1:3]) + '0000', '%d%m%y%H%M%S%f')
+    eeg_time = datetime.strptime(''.join(eeg_time[1:3]) + '0000',
+                                 '%d%m%y%H%M%S%f')
 
     return eeg_time
 
@@ -117,11 +117,16 @@ def get_haptic_time(subject, hand_type, control_type, config):
     eeg_time = get_eeg_time(subject, hand_type)
 
     # Trial time
-    column_name = np.genfromtxt(
-        haptic_path, dtype=str, delimiter=';', max_rows=1).tolist()
+    column_name = np.genfromtxt(haptic_path,
+                                dtype=str,
+                                delimiter=';',
+                                max_rows=1).tolist()
     time_idx = column_name.index('dataTime')
-    trial_time = np.genfromtxt(
-        haptic_path, dtype=str, delimiter=';', usecols=time_idx, skip_header=1).tolist()
+    trial_time = np.genfromtxt(haptic_path,
+                               dtype=str,
+                               delimiter=';',
+                               usecols=time_idx,
+                               skip_header=1).tolist()
     # Change the AM or PM
     if eeg_time.hour >= 12:
         start_time = trial_time[0].split('_')[1] + ' PM'
@@ -130,10 +135,12 @@ def get_haptic_time(subject, hand_type, control_type, config):
     # Update year, month, and day
     start_t = datetime.strptime(start_time, '%I%M%S%f %p')
     start_t = start_t.replace(year=eeg_time.year,
-                              month=eeg_time.month, day=eeg_time.day)
+                              month=eeg_time.month,
+                              day=eeg_time.day)
     end_t = datetime.strptime(end_time, '%I%M%S%f %p')
     end_t = end_t.replace(year=eeg_time.year,
-                          month=eeg_time.month, day=eeg_time.day)
+                          month=eeg_time.month,
+                          day=eeg_time.day)
 
     trial_start = (start_t - eeg_time).total_seconds()  # convert to seconds
     trial_end = (end_t - eeg_time).total_seconds()
@@ -163,15 +170,21 @@ def get_eeg_data(subject, hand_type):
     eeg_path = get_eeg_path(subject, hand_type)
     eeg_time = get_eeg_time(subject, hand_type)
     # EEG info
-    info = mne.create_info(ch_names=['POz', 'Fz', 'Cz', 'C3', 'C4', 'F3', 'F4', 'P3', 'P4', 'STI 014'],
+    info = mne.create_info(ch_names=[
+        'POz', 'Fz', 'Cz', 'C3', 'C4', 'F3', 'F4', 'P3', 'P4', 'STI 014'
+    ],
                            ch_types=['eeg'] * 9 + ['stim'],
                            sfreq=256.0,
                            montage="standard_1020")
     # Read the raw data
-    exclude = ['ECG', 'AUX1', 'AUX2', 'AUX3', 'ESUTimestamp',
-               'SystemTimestamp', 'Tilt X', 'Tilt Y', 'Tilt Z']
-    raw = mne.io.read_raw_edf(eeg_path, preload=True,
-                              exclude=exclude, verbose=False)
+    exclude = [
+        'ECG', 'AUX1', 'AUX2', 'AUX3', 'ESUTimestamp', 'SystemTimestamp',
+        'Tilt X', 'Tilt Y', 'Tilt Z'
+    ]
+    raw = mne.io.read_raw_edf(eeg_path,
+                              preload=True,
+                              exclude=exclude,
+                              verbose=False)
     data = raw.get_data()
     raw_selected = mne.io.RawArray(data, info, verbose=False)
 
@@ -197,19 +210,23 @@ def create_eeg_epochs(subject, hand_type, control_type, config, preload=True):
     epochs  : epoched data
 
     """
-    trial_start, trial_end = get_haptic_time(
-        subject, hand_type, control_type, config)
+    trial_start, trial_end = get_haptic_time(subject, hand_type, control_type,
+                                             config)
     raw = get_eeg_data(subject, hand_type)
-    raw.notch_filter(60, filter_length='auto',
-                     phase='zero', verbose=False)  # Line noise
+    raw.notch_filter(60, filter_length='auto', phase='zero',
+                     verbose=False)  # Line noise
     raw.filter(l_freq=1, h_freq=50, fir_design='firwin',
                verbose=False)  # Band pass filter
     # raw.set_eeg_reference('average')
     raw_selected = raw.copy().crop(tmin=trial_start, tmax=trial_end)
-    events = mne.make_fixed_length_events(
-        raw_selected, duration=config['epoch_length'])
-    epochs = mne.Epochs(raw_selected, events, tmin=0,
-                        tmax=config['epoch_length'], verbose=False, preload=preload)
+    events = mne.make_fixed_length_events(raw_selected,
+                                          duration=config['epoch_length'])
+    epochs = mne.Epochs(raw_selected,
+                        events,
+                        tmin=0,
+                        tmax=config['epoch_length'],
+                        verbose=False,
+                        preload=preload)
 
     return epochs
 

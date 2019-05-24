@@ -1,0 +1,106 @@
+---
+title: "Visualization"
+output: html_notebook
+---
+
+```{r Initialization}
+rm(list=ls())
+
+library(yaml)
+library(ggplot2)
+library(feather)
+library(lme4)
+library(simr)
+library(here)
+library(sjPlot)
+library(sjmisc)
+library(stargazer)
+library(ggpubr)
+
+
+# Read the configuration file
+config <- yaml.load_file("../config.yml")
+
+eeg_r_dataset_path <- here(config$eeg_r_dataset)
+df <- read_feather(eeg_r_dataset_path)
+df <- na.omit(df)
+config$epoch_length
+
+# Convert to factor
+df$control_type <- as.factor(df$control_type)
+df$hand_type <- as.factor(df$hand_type)
+df$subject <- as.factor(df$subject)
+
+response <- df$beta_alpha_theta
+df['output'] <- response
+```
+
+```{r Plotting for group non dominant hand}
+df_dominant <- df[df[, 'hand_type'] == 'dominant',]
+response <- df_dominant$output
+theme_set(theme_bw(base_size = 10))
+qplot(control_type, response, facets = . ~ subject,
+      colour = subject, geom = "boxplot", data = df_dominant)
+```
+
+```{r Plotting for group dominant hand}
+df_non_dominant <- df[df[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$output
+qplot(control_type, response, facets = . ~ subject,
+      colour = subject, geom = "boxplot", data = df_non_dominant)
+```
+
+
+```{r Plotting non dominant hand}
+df_non_dominant <-  df[df[, 'hand_type'] == 'non_dominant',]
+plot_df <- df_non_dominant [df_non_dominant [, 'subject'] == '8820',]
+
+
+comparison_list <- list( c("no_force", "error_augmentation"), 
+                         c("no_force", "error_reduction"), 
+                         c("error_reduction", "error_augmentation"))
+
+at.x <- seq(1,by=.1,length.out=3)
+pdf("significance_non_dominant.pdf",width=4,height=4)
+p <- ggboxplot(plot_df, x = 'control_type', y = 'beta_alpha_theta',
+               fill = 'control_type', bxp.errorbar=TRUE, 
+               bxp.errorbar.width = 0.15, width = 0.35, 
+               outline=FALSE, boxwex=.1) + 
+stat_compare_means(
+    comparisons = comparison_list,
+    label.y = c(0.25, 0.55, 0.70) + 1.2,
+    label = "p.signif"
+    ) +
+    theme_classic() + scale_fill_brewer(palette = "RdBu") + theme(legend.position =
+    "top") + ylab(expression(beta /(theta + alpha))) + xlab('Control type') +
+    scale_x_discrete(labels = c("error augmentation", "error reduction", "no force"))
+    p
+```
+
+
+```{r Plotting dominant hand}
+df_dominant <-  df[df[, 'hand_type'] == 'dominant',]
+plot_df <- df_dominant [df_dominant [, 'subject'] == '8820',]
+
+
+comparison_list <- list( c("no_force", "error_augmentation"), 
+                         c("no_force", "error_reduction"), 
+                         c("error_reduction", "error_augmentation"))
+
+at.x <- seq(1,by=.1,length.out=3)
+pdf("significance_dominant.pdf",width=4,height=4)
+p <- ggboxplot(plot_df, x = 'control_type', y = 'beta_alpha_theta',
+               fill = 'control_type', bxp.errorbar=TRUE, 
+               bxp.errorbar.width = 0.15, width = 0.35, 
+               outline=FALSE, boxwex=.1) + 
+  stat_compare_means(
+    comparisons = comparison_list,
+    label.y = c(0.25, 0.45, 0.55) + 1.2,
+    label = "p.signif", ref.group = "0.01"
+    ) +
+    theme_classic() + scale_fill_brewer(palette = "RdBu") + theme(legend.position =
+    "top") + ylab(expression(beta /(theta + alpha))) + xlab('Control type') +
+    scale_x_discrete(labels = c("error augmentation", "error reduction", "no force"))
+    p
+    
+```

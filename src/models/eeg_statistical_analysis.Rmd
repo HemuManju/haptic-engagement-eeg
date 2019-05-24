@@ -2,6 +2,8 @@
 title: "eeg_statistical_analysis"
 ---
 ```{r Initialization}
+rm(list=ls())
+
 library(yaml)
 library(ggplot2)
 library(feather)
@@ -11,6 +13,7 @@ library(here)
 library(sjPlot)
 library(sjmisc)
 library(stargazer)
+library(ggpubr)
 
 
 # Read the configuration file
@@ -27,29 +30,30 @@ df$hand_type <- as.factor(df$hand_type)
 df$subject <- as.factor(df$subject)
 ```
 ```{r Response}
-response <- df$beta_theta
+response <- df$beta_alpha_theta
 df['output'] <- response
 ```
 
-
 ```{r Prior analysis}
 df$hand_type <- relevel(df$hand_type, "dominant")
-engagement.model <- glmer(response ~ 1 + (1 | df$hand_type), data = df, family = Gamma(link = log))
+engagement.model <- glmer(response ~ 1 + (1 | df$hand_type), data = df, family = gaussian(link = log))
 summary(engagement.model)
 ```
 
 ```{r Linear model 1 with both dominant and non_dominant hand type}
-response <- df$output
-df$control_type <- relevel(df$control_type, "no_force")
-df$hand_type <- relevel(df$hand_type, "dominant")
-model1 <- glmer(response ~ control_type + (1 | subject),
-               data = df, family = gaussian(link = log))
-summary(model1)
+# response <- df$output
+# df$control_type <- relevel(df$control_type, "no_force")
+# df$hand_type <- relevel(df$hand_type, "dominant")
+# model1 <- glmer(response ~ control_type + (1 | subject),
+#                data = df, family = gaussian(link = log))
+# summary(model1)
 ```
 
 ```{r Linear model 2 using only dominant hand}
+df$control_type <- relevel(df$control_type, "no_force")
 df_dominant <- df[df[, 'hand_type'] == 'dominant',]
 response <- df_dominant$output
+
 model2 <- glmer(response ~ control_type + (1 | subject),
                data = df_dominant, family = gaussian(link = log))
 summary(model2)
@@ -58,32 +62,41 @@ summary(model2)
 ```{r Linear model 3 using only non dominant hand}
 df_non_dominant <-  df[df[, 'hand_type'] == 'non_dominant',]
 response <- df_non_dominant$output
+df$control_type <- relevel(df$control_type, "no_force")
 model3 <- glmer(response ~ control_type + (1 | subject),
                data = df_non_dominant, family = gaussian(link = log))
 summary(model3)
 ```
 
-```{r Power analysis}
-# df_non_dominant <-  df[df[, 'hand_type'] == 'non_dominant',]
-# response <- df_non_dominant$output
-# model4 <- glmer(response ~ control_type + (1 | subject),
-#                data = df_non_dominant, family = gaussian(link = log))
-# summary(model4)
-# fixef(model1)["control_typeerror_augmentation"]
-# fixef(model1)["control_typeerror_augmentation"] <- 0.05
-# fixef(model1)["control_typeerror_augmentation"]
-# 
-# powerSim(model1, nsim = 10)
+```{r Power analysis for non dominant hand}
+df_non_dominant <-  df[df[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$output
+model4 <- glmer(log(response) ~ control_type + (1 | subject),
+               data = df_non_dominant, family = gaussian())
+summary(model4)
+fixef(model4)["control_typeerror_augmentation"]
+fixef(model4)["control_typeerror_augmentation"] <- -0.05
+powerSim(model4, nsim = 50)
+
+pdf("power_curve.pdf",width=7,height=5)
+pc4 <- powerCurve(model4, along = "subject", nsim = 50)
+plot(pc4)
+dev.off()
 ```
 
-```{r Plotting}
-# theme_set(theme_bw(base_size = 10))
-qplot(control_type, response, facets = . ~ subject,
-      colour = subject, geom = "boxplot", data = df_non_dominant)
-# # plot_model(model3, type = "re", show.values = TRUE, value.offset = .4)
-```
 
-```{r df_non_dominant, results='asis'}
-tab_model(model2, title="Regression results under dominant hand")
-```
+```{r Power analysis for dominant hand}
+df_non_dominant <-  df[df[, 'hand_type'] == 'dominant',]
+response <- df_non_dominant$output
+model5 <- glmer(log(response) ~ control_type + (1 | subject),
+               data = df_non_dominant, family = gaussian())
+summary(model5)
+# fixef(model5)["control_typeerror_augmentation"]
+# fixef(model5)["control_typeerror_augmentation"] <- 0.05
+# powerSim(model5, nsim = 50)
 
+pdf("power_curve.pdf",width=7,height=5)
+pc5 <- powerCurve(model5, along = "subject", nsim = 50)
+plot(pc5)
+dev.off()
+```

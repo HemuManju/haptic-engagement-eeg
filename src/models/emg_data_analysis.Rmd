@@ -1,0 +1,48 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(yaml)
+library(ggplot2)
+library(feather)
+library(lme4)
+library(simr)
+library(here)
+library(fitdistrplus)
+library(MASS)
+
+# Read the configuration path
+config <- yaml.load_file("../config.yml")
+
+emg_r_dataset_path <- here(config$emg_r_dataset)
+df <- read_feather(emg_r_dataset_path)
+df <- na.omit(df)
+config$epoch_length
+
+```
+
+
+```{r Verify the distribution of the feature}
+
+# Verify the distribution of features 
+feature <- df$rms
+qqp(feature, "lnorm")
+
+gamma <- fitdistr(feature, "gamma")
+qqp(feature, "gamma", shape = gamma$estimate[[1]], rate = gamma$estimate[[2]])
+
+fit.weibull <- fitdist(feature, "weibull")
+fit.norm <- fitdist(feature, "norm")
+fit.gamma <- fitdist(feature, "gamma")
+fit.lnorm <- fitdist(feature, "lnorm")
+
+# # Verify the best fit of data
+descdist(feature, discrete = FALSE)
+fit.norm$aic
+fit.weibull$aic
+fit.lnorm$aic
+fit.gamma$aic
+```
+
