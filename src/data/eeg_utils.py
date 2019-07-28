@@ -1,15 +1,10 @@
 import mne
+import yaml
 import numpy as np
 from pathlib import Path
-import seaborn as sb
-import pandas as pd
-from scipy import signal
-from scipy.signal import resample
+
 from datetime import datetime
-from autoreject import Ransac, AutoReject
-from mne.time_frequency import psd_multitaper
-from autoreject import get_rejection_threshold
-import yaml
+
 import deepdish as dd
 
 # Import configuration
@@ -198,7 +193,8 @@ def get_eeg_data(subject, hand_type):
 
 
 def create_eeg_epochs(subject, hand_type, control_type, config, preload=True):
-    """Get the epcohed eeg data excluding unnessary channels from fif file and also filter the signal.
+    """Get the epcohed eeg data excluding unnessary
+    channels from fif file and also filter the signal.
 
     Parameter
     ----------

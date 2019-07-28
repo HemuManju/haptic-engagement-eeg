@@ -1,8 +1,10 @@
-import deepdish as dd
-from autoreject import get_rejection_threshold
-import yaml
+from pathlib import Path
 import collections
-from .eeg_utils import *
+import deepdish as dd
+
+import mne
+
+from autoreject import (get_rejection_threshold, AutoReject)
 
 
 def autoreject_repair_epochs(epochs, reject_plot=False):
@@ -18,10 +20,13 @@ def autoreject_repair_epochs(epochs, reject_plot=False):
     """
     # Cleaning with autoreject
     picks = mne.pick_types(epochs.info, eeg=True)  # Pick EEG channels
-    ar = AutoReject(n_interpolate=[1, 2, 3], n_jobs=6, picks=picks,
+    ar = AutoReject(n_interpolate=[1, 2, 3],
+                    n_jobs=6,
+                    picks=picks,
                     thresh_func='bayesian_optimization',
                     cv=3,
-                    random_state=42, verbose=False)
+                    random_state=42,
+                    verbose=False)
 
     cleaned_epochs, reject_log = ar.fit_transform(epochs, return_log=True)
 
@@ -45,7 +50,8 @@ def append_eog_index(epochs, ica):
     """
     # Find bad EOG artifact (eye blinks) by correlating with Fp1
     eog_inds, scores_eog = ica.find_bads_eog(epochs,
-                                             ch_name='F3', verbose=False)
+                                             ch_name='F3',
+                                             verbose=False)
     eog_inds.sort()
     # Append only when the correlation is high
     id_eog = [i for i, n in enumerate(scores_eog.tolist()) if abs(n) >= 0.65]
@@ -53,7 +59,8 @@ def append_eog_index(epochs, ica):
 
     # Find bad EOG artifact (eye blinks) by correlation with Fp2
     eog_inds, scores_eog = ica.find_bads_eog(epochs,
-                                             ch_name='F4', verbose=False)
+                                             ch_name='F4',
+                                             verbose=False)
     eog_inds.sort()
     # Append only when the correlation is high
     id_eog = [i for i, n in enumerate(scores_eog.tolist()) if abs(n) >= 0.65]
@@ -75,10 +82,15 @@ def clean_with_ica(epochs, subject, hand, control, config, show_ica=False):
 
     """
 
-    picks = mne.pick_types(epochs.info, meg=False, eeg=True,
-                           eog=False, stim=False, exclude='bads')
+    picks = mne.pick_types(epochs.info,
+                           meg=False,
+                           eeg=True,
+                           eog=False,
+                           stim=False,
+                           exclude='bads')
     ica = mne.preprocessing.ICA(n_components=None,
-                                method="picard", verbose=False)
+                                method="picard",
+                                verbose=False)
     # Get the rejection threshold using autoreject
     if config['use_previous_ica']:
         read_path = Path(__file__).parents[2] / config['previous_ica']
@@ -95,12 +107,12 @@ def clean_with_ica(epochs, subject, hand, control, config, show_ica=False):
     if show_ica:
         ica.plot_components(inst=epochs)
 
-
     return epochs, ica
 
 
 def clean_dataset(config):
-    """Create cleaned dataset (by running autoreject and ICA) with each subject data in a dictionary.
+    """Create cleaned dataset (by running autoreject and ICA)
+    with each subject data in a dictionary.
 
     Parameter
     ----------
@@ -115,13 +127,17 @@ def clean_dataset(config):
     clean_eeg_dataset = {}
     read_path = Path(__file__).parents[2] / config['raw_eeg_dataset']
     raw_eeg = dd.io.load(str(read_path))  # load the raw eeg
-    def nested_dict(): return collections.defaultdict(nested_dict)
+
+    def nested_dict():
+        return collections.defaultdict(nested_dict)
+
     for subject in config['subjects']:
         data = nested_dict()
         for hand in config['hand_type']:
             for control in config['control_type']:
                 epochs = raw_eeg[subject]['eeg'][hand][control]
-                ica_epochs, ica = clean_with_ica(epochs, subject, hand, control, config)
+                ica_epochs, ica = clean_with_ica(epochs, subject, hand,
+                                                 control, config)
                 repaired_eeg = autoreject_repair_epochs(ica_epochs)
                 data['eeg'][hand][control] = repaired_eeg
                 data['ica'][hand][control] = ica

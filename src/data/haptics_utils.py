@@ -1,11 +1,9 @@
-import deepdish as dd
 import numpy as np
 import mne
-import yaml
-import collections
+
 from pathlib import Path
 import ast
-from .eeg_utils import *
+from .eeg_utils import read_eeg_epochs
 
 
 def get_haptic_path(subject, hand_type, control_type, config):
@@ -70,21 +68,34 @@ def get_haptic_emg_data(subject, hand_type, control_type, config):
     haptic_path = get_haptic_path(subject, hand_type, control_type, config)
 
     # Trial time
-    column_name = np.genfromtxt(
-        haptic_path, dtype=str, delimiter=';', max_rows=1).tolist()
-    features = ['CursorPosition', 'desiredPosition',
-                ' desiredPointOnSpline', 'proportionalGain', 'keyPressed']
-    dummy = np.genfromtxt(haptic_path, dtype=str,
-                          delimiter=';', usecols=0, skip_header=1).tolist()
-    time = np.genfromtxt(haptic_path, dtype=float,
-                         delimiter=';', usecols=1, skip_header=1)
+    column_name = np.genfromtxt(haptic_path,
+                                dtype=str,
+                                delimiter=';',
+                                max_rows=1).tolist()
+    features = [
+        'CursorPosition', 'desiredPosition', ' desiredPointOnSpline',
+        'proportionalGain', 'keyPressed'
+    ]
+    dummy = np.genfromtxt(haptic_path,
+                          dtype=str,
+                          delimiter=';',
+                          usecols=0,
+                          skip_header=1).tolist()
+    time = np.genfromtxt(haptic_path,
+                         dtype=float,
+                         delimiter=';',
+                         usecols=1,
+                         skip_header=1)
     sampling_freq = 1 / np.mean(np.diff(time))
     ids = [i for i, x in enumerate(column_name) if x in features]
     haptic_data = np.empty((0, len(dummy)))
     columns = []
     for i, id in enumerate(ids):
-        data = np.genfromtxt(haptic_path, dtype=str,
-                             delimiter=';', usecols=id, skip_header=1).tolist()
+        data = np.genfromtxt(haptic_path,
+                             dtype=str,
+                             delimiter=';',
+                             usecols=id,
+                             skip_header=1).tolist()
         columns.append(features[i].lower())
         array = convert_to_array(data)
         haptic_data = np.append(haptic_data, array, axis=0)
@@ -128,10 +139,13 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
     # Concatenate with the haptic data
     data = np.concatenate((haptic_data, force, error), axis=0)
 
-    # The data was stored in such a way that keyPressed is actual emg, so replace the name
+    # The data was stored in such a way that
+    # keyPressed is actual emg, so replace the name
     columns[columns.index('keypressed')] = 'emg'
-    haptic_info = [x + y for x in ['cursor', 'desired',
-                                   'spline', 'gain'] for y in ['_x', '_y', '_z']]
+    haptic_info = [
+        x + y for x in ['cursor', 'desired', 'spline', 'gain']
+        for y in ['_x', '_y', '_z']
+    ]
     emg_info = ['emg_' + str(i) for i in range(8)]
     force_info = ['force' + x for x in ['_x', '_y', '_z']]
     error_info = ['error' + x for x in ['_x', '_y', '_z']]
@@ -140,14 +154,17 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
                            ch_types=['misc'] * len(names_info),
                            sfreq=sampling_freq)
     raw = mne.io.RawArray(data, info, verbose=False)
-    events = mne.make_fixed_length_events(
-        raw, duration=config['epoch_length'])
-    epochs = mne.Epochs(raw, events, tmin=0,
-                        tmax=config['epoch_length'], verbose=False, preload=True)
+    events = mne.make_fixed_length_events(raw, duration=config['epoch_length'])
+    epochs = mne.Epochs(raw,
+                        events,
+                        tmin=0,
+                        tmax=config['epoch_length'],
+                        verbose=False,
+                        preload=True)
 
     # Sync with eeg time
-    eeg_epochs = read_eeg_epochs(
-        subject, hand_type, control_type, config)  # eeg file
+    eeg_epochs = read_eeg_epochs(subject, hand_type, control_type,
+                                 config)  # eeg file
     drop_id = [id for id, val in enumerate(eeg_epochs.drop_log) if val]
     if len(eeg_epochs.drop_log) != len(epochs.drop_log):
         print(len(eeg_epochs.drop_log), len(epochs.drop_log))

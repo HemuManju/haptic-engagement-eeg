@@ -4,6 +4,7 @@ import pickle
 import feather
 import numpy as np
 from math import floor
+from warnings import warn
 
 
 def read_eeg_epochs(subject, hand_type, control_type, config):
@@ -86,7 +87,9 @@ def read_with_pickle(path):
 
 def compute_zero_crossings(data, threshold=np.finfo(np.float64).eps):
     """Number of zero-crossings (per channel).
-        The "threshold" parameter is used to clip 'small' values to zero.Changing its default value is likely to affect the number ofzero-crossings returned by the function.
+        The "threshold" parameter is used to clip 'small' values
+        to zero.Changing its default value is likely
+        to affect the number ofzero-crossings returned by the function.
 
     Parameters
     ----------

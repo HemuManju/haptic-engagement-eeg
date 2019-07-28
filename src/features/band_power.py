@@ -1,5 +1,5 @@
 import numpy as np
-from mne.time_frequency import psd_multitaper, psd_welch
+from mne.time_frequency import psd_multitaper
 import pandas as pd
 import mne
 from .utils import read_eeg_epochs
@@ -20,17 +20,25 @@ def get_band_power(subject, hand_type, control_type, config):
     Returns
     -------
     dataframe
-        6 band powers of given subject and hand type at different sensor locations.
+        6 band powers of given subject and hand type
+        at different sensor locations.
 
     """
     epochs = read_eeg_epochs(subject, hand_type, control_type, config)
     picks = mne.pick_types(epochs.info, eeg=True)
-    ch_names = epochs.ch_names[picks[0]:picks[-1]+1]
-    psds, freqs = psd_multitaper(epochs, fmin=1.0, fmax=64.0, picks=picks, n_jobs=6, verbose=False, normalization='full')
+    ch_names = epochs.ch_names[picks[0]:picks[-1] + 1]
+    psds, freqs = psd_multitaper(epochs,
+                                 fmin=1.0,
+                                 fmax=64.0,
+                                 picks=picks,
+                                 n_jobs=6,
+                                 verbose=False,
+                                 normalization='full')
 
     psd_band = []
     for freq_band in config['freq_bands']:
-        psd_band.append(psds[:, :, (freqs >= freq_band[0]) & (freqs < freq_band[1])].mean(axis=-1))
+        psd_band.append(psds[:, :, (freqs >= freq_band[0]) &
+                             (freqs < freq_band[1])].mean(axis=-1))
     # Form pandas dataframe
     data = np.concatenate(psd_band, axis=1)
     columns = [x + '_' + y for x in ch_names for y in config['band_names']]
@@ -57,7 +65,8 @@ def band_power_dataset(config):
     Returns
     -------
     dataframe
-        6 band powers of given subject and hand type at different sensor locations.
+        6 band powers of given subject and hand type
+        at different sensor locations.
 
     """
 
@@ -67,6 +76,7 @@ def band_power_dataset(config):
         for hand in config['hand_type']:
             for control in config['control_type']:
                 df.append(get_band_power(subject, hand, control, config))
-        band_power_dataset[subject] = pd.concat([x for x in df], ignore_index=True)
+        band_power_dataset[subject] = pd.concat([x for x in df],
+                                                ignore_index=True)
 
     return band_power_dataset

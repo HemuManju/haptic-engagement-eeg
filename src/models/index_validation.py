@@ -1,6 +1,6 @@
 import numpy as np
-from .utils import *
 import pandas as pd
+from pathlib import Path
 
 
 def calculate_engagement_index(data, config):
