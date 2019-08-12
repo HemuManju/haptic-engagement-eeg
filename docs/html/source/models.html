@@ -91,6 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="features.html">features package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">models package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-models.index_validation">models.index_validation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-models.utils">models.utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-models">Module contents</a></li>
 </ul>
@@ -164,6 +165,46 @@
 <h1>models package<a class="headerlink" href="#models-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-models.index_validation">
+<span id="models-index-validation-module"></span><h2>models.index_validation module<a class="headerlink" href="#module-models.index_validation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="models.index_validation.calculate_engagement_index">
+<code class="sig-name descname">calculate_engagement_index</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/index_validation.html#calculate_engagement_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.index_validation.calculate_engagement_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate engagement_index using different features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dataframe</em>) – Dataframe containing band powers.</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – Configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dataframe of calculated engagement indices.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="models.index_validation.validate_engagement_index">
+<code class="sig-name descname">validate_engagement_index</code><span class="sig-paren">(</span><em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/models/index_validation.html#validate_engagement_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#models.index_validation.validate_engagement_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enagement index of subjects and hand_type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>yaml</em>) – Configuration file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Description of returned object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dataframe of all enagement index</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-models.utils">
 <span id="models-utils-module"></span><h2>models.utils module<a class="headerlink" href="#module-models.utils" title="Permalink to this headline">¶</a></h2>

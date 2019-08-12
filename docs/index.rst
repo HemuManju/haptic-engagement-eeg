@@ -9,7 +9,7 @@ Haptic_engagement_eeg documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
    getting-started
    source/data
