@@ -1,7 +1,6 @@
 main module
 ===========
 
-.. automodule:: main
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. image:: ../module_layout.pdf
+     :width: 1200
+     :alt: Module layout
