@@ -89,7 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">data package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#data-clean-eeg-dataset-module">data.clean_eeg_dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-data.clean_eeg_dataset">data.clean_eeg_dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-data.create_eeg_dataset">data.create_eeg_dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-data.create_haptic_dataset">data.create_haptic_dataset module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-data.eeg_utils">data.eeg_utils module</a></li>
@@ -169,8 +169,81 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="data-clean-eeg-dataset-module">
-<h2>data.clean_eeg_dataset module<a class="headerlink" href="#data-clean-eeg-dataset-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-data.clean_eeg_dataset">
+<span id="data-clean-eeg-dataset-module"></span><h2>data.clean_eeg_dataset module<a class="headerlink" href="#module-data.clean_eeg_dataset" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="data.clean_eeg_dataset.append_eog_index">
+<code class="sig-name descname">append_eog_index</code><span class="sig-paren">(</span><em class="sig-param">epochs</em>, <em class="sig-param">ica</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/clean_eeg_dataset.html#append_eog_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.clean_eeg_dataset.append_eog_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detects the eye blink aritifact indices and adds that information to ICA</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epochs</strong> (<em>mne epoch object</em>) – Epoched, filtered, and autorejected eeg data</p></li>
+<li><p><strong>ica</strong> (<em>mne ica object</em>) – ICA object from mne.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>ica</strong> – ICA object with eog indices appended</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mne ica object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.clean_eeg_dataset.autoreject_repair_epochs">
+<code class="sig-name descname">autoreject_repair_epochs</code><span class="sig-paren">(</span><em class="sig-param">epochs</em>, <em class="sig-param">reject_plot=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/clean_eeg_dataset.html#autoreject_repair_epochs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.clean_eeg_dataset.autoreject_repair_epochs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rejects the bad epochs with AutoReject algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>epochs</strong> (<em>mne epoch object</em>) – Epoched, filtered eeg data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>epochs</strong> – Epoched data after rejection of bad epochs.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mne epoch object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.clean_eeg_dataset.clean_dataset">
+<code class="sig-name descname">clean_dataset</code><span class="sig-paren">(</span><em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/clean_eeg_dataset.html#clean_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.clean_eeg_dataset.clean_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create cleaned dataset (by running autoreject and ICA)
+with each subject data in a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>clean_eeg_dataset</strong> – A dictionary dataset of all the subjects with different conditions</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.clean_eeg_dataset.clean_with_ica">
+<code class="sig-name descname">clean_with_ica</code><span class="sig-paren">(</span><em class="sig-param">epochs</em>, <em class="sig-param">subject</em>, <em class="sig-param">hand</em>, <em class="sig-param">control</em>, <em class="sig-param">config</em>, <em class="sig-param">show_ica=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/clean_eeg_dataset.html#clean_with_ica"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.clean_eeg_dataset.clean_with_ica" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean epochs with ICA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>epochs</strong> (<em>mne epoch object</em>) – Epoched, filtered, and autorejected eeg data</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>ica</strong> (<em>mne epoch object</em>) – ICA object from mne</p></li>
+<li><p><strong>epochs</strong> (<em>mne epoch object</em>) – ica cleaned epochs</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-data.create_eeg_dataset">
 <span id="data-create-eeg-dataset-module"></span><h2>data.create_eeg_dataset module<a class="headerlink" href="#module-data.create_eeg_dataset" title="Permalink to this headline">¶</a></h2>
