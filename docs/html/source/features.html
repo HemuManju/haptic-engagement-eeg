@@ -1,0 +1,503 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>features package &mdash; Haptic engagement eeg 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="models package" href="models.html" />
+    <link rel="prev" title="data package" href="data.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Haptic engagement eeg
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">data package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">features package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-features.band_power">features.band_power module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-features.emg_features">features.emg_features module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-features.engagement">features.engagement module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-features.utils">features.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-features">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualization.html">visualization package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Haptic engagement eeg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>features package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/features.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="features-package">
+<h1>features package<a class="headerlink" href="#features-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-features.band_power">
+<span id="features-band-power-module"></span><h2>features.band_power module<a class="headerlink" href="#module-features.band_power" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="features.band_power.band_power_dataset">
+<code class="sig-name descname">band_power_dataset</code><span class="sig-paren">(</span><em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/band_power.html#band_power_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.band_power.band_power_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Band power of all subjects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>config</strong> (<em>yaml file</em>) – Configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>df</strong> – A dictionary 6 band powers of given subject and hand type
+at different sensor locations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="features.band_power.get_band_power">
+<code class="sig-name descname">get_band_power</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em>, <em class="sig-param">control_type</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/band_power.html#get_band_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.band_power.get_band_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the band power of EEG signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>config</strong> (<em>yaml file</em>) – Configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>df</strong> – 6 band powers of given subject and hand type
+at different sensor locations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-features.emg_features">
+<span id="features-emg-features-module"></span><h2>features.emg_features module<a class="headerlink" href="#module-features.emg_features" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="features.emg_features.create_emg_features">
+<code class="sig-name descname">create_emg_features</code><span class="sig-paren">(</span><em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/emg_features.html#create_emg_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.emg_features.create_emg_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create EMG feature dataset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pandas dataframe.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="features.emg_features.get_emg_feature">
+<code class="sig-name descname">get_emg_feature</code><span class="sig-paren">(</span><em class="sig-param">emg_data</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/emg_features.html#get_emg_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.emg_features.get_emg_feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create emg feature set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emg_data</strong> (<em>array</em>) – A 8 channel array of emg.</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of calculated emg features.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="features.emg_features.svd_entropy">
+<code class="sig-name descname">svd_entropy</code><span class="sig-paren">(</span><em class="sig-param">emg_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/emg_features.html#svd_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.emg_features.svd_entropy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the fft value of emg signal from 8 electrodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>emg_data</strong> (<em>array</em>) – An array of EMG data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of zeros crosses of all 8 channels.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-features.engagement">
+<span id="features-engagement-module"></span><h2>features.engagement module<a class="headerlink" href="#module-features.engagement" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="features.engagement.calculate_engagement_index">
+<code class="sig-name descname">calculate_engagement_index</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/engagement.html#calculate_engagement_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.engagement.calculate_engagement_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate engagement_index using different features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dataframe</em>) – Dataframe containing band powers.</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – Configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>df</strong> – Dataframe of calculated engagement indices.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="features.engagement.engagement_index">
+<code class="sig-name descname">engagement_index</code><span class="sig-paren">(</span><em class="sig-param">subjects</em>, <em class="sig-param">hand_type</em>, <em class="sig-param">control_type</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/engagement.html#engagement_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.engagement.engagement_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enagement index of subjects and hand_type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>control_type</strong> (<em>str</em>) – Control type (error augmentation or error reduction)</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>engagement_index</strong> – A dataframe of all enagement index</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-features.utils">
+<span id="features-utils-module"></span><h2>features.utils module<a class="headerlink" href="#module-features.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="features.utils.compute_svd_entropy">
+<code class="sig-name descname">compute_svd_entropy</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">tau=2</em>, <em class="sig-param">emb=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/utils.html#compute_svd_entropy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.utils.compute_svd_entropy" title="Permalink to this definition">¶</a></dt>
+<dd><p>SVD entropy (per channel).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_channels</em><em>, </em><em>n_times</em><em>)</em>) – </p></li>
+<li><p><strong>tau</strong> (<em>int</em><em> (</em><em>default: 2</em><em>)</em>) – Delay (number of samples).</p></li>
+<li><p><strong>emb</strong> (<em>int</em><em> (</em><em>default: 10</em><em>)</em>) – Embedding dimension.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray, shape (n_channels,)</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Alias of the feature function: <strong>svd_entropy</strong>. See <a class="footnote-reference brackets" href="#id2" id="id1">1</a>.</p>
+<p class="rubric">References</p>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Roberts, S. J. et al. (1999). Temporal and spatial complexity
+measures for electroencephalogram based brain-computer interfacing.
+Medical &amp; biological engineering &amp; computing, 37(1), 93-98.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="features.utils.compute_zero_crossings">
+<code class="sig-name descname">compute_zero_crossings</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">threshold=2.220446049250313e-16</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/utils.html#compute_zero_crossings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.utils.compute_zero_crossings" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Number of zero-crossings (per channel).</dt><dd><p>The “threshold” parameter is used to clip ‘small’ values
+to zero.Changing its default value is likely
+to affect the number ofzero-crossings returned by the function.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_channels</em><em>, </em><em>n_times</em><em>)</em>) – </p></li>
+<li><p><strong>threshold</strong> (<em>float</em><em> (</em><em>default: np.finfo</em><em>(</em><em>np.float64</em><em>)</em><em>eps</em><em>)</em>) – Threshold used to determine when a float should de treated as zero.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>output</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray, shape (n_channels,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="features.utils.read_eeg_epochs">
+<code class="sig-name descname">read_eeg_epochs</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em>, <em class="sig-param">control_type</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/utils.html#read_eeg_epochs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.utils.read_eeg_epochs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the eeg epoch file of given subject and trial</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>control_type</strong> (<em>str</em>) – Control type (error augmentation or error reduction)</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>EEG epoch.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>epoch</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="features.utils.read_with_deepdish">
+<code class="sig-name descname">read_with_deepdish</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/utils.html#read_with_deepdish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.utils.read_with_deepdish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the hdf5 dataset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>string</em>) – Path to the dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="features.utils.read_with_pickle">
+<code class="sig-name descname">read_with_pickle</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/utils.html#read_with_pickle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.utils.read_with_pickle" title="Permalink to this definition">¶</a></dt>
+<dd><p>save the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – path to save.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>data</strong> – A dictionary of pandas dataframe to save</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="features.utils.save_to_r_dataset">
+<code class="sig-name descname">save_to_r_dataset</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/features/utils.html#save_to_r_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#features.utils.save_to_r_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert pandas dataframe to r dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>dataframe</em>) – Pandas dataframe.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to save.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Description of returned object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-features">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-features" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="models.html" class="btn btn-neutral float-right" title="models package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="data.html" class="btn btn-neutral float-left" title="data package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,512 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>data package &mdash; Haptic engagement eeg 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="features package" href="features.html" />
+    <link rel="prev" title="Getting started" href="../getting-started.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Haptic engagement eeg
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">data package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-clean-eeg-dataset-module">data.clean_eeg_dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-data.create_eeg_dataset">data.create_eeg_dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-data.create_haptic_dataset">data.create_haptic_dataset module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-data.eeg_utils">data.eeg_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-data.haptics_utils">data.haptics_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="features.html">features package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualization.html">visualization package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Haptic engagement eeg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>data package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/data.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="data-package">
+<h1>data package<a class="headerlink" href="#data-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="data-clean-eeg-dataset-module">
+<h2>data.clean_eeg_dataset module<a class="headerlink" href="#data-clean-eeg-dataset-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-data.create_eeg_dataset">
+<span id="data-create-eeg-dataset-module"></span><h2>data.create_eeg_dataset module<a class="headerlink" href="#module-data.create_eeg_dataset" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="data.create_eeg_dataset.eeg_dataset">
+<code class="sig-name descname">eeg_dataset</code><span class="sig-paren">(</span><em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/create_eeg_dataset.html#eeg_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.create_eeg_dataset.eeg_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the data with each subject data in a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>eeg_dataset</strong> – A dictionary dataset of all the subjects with different conditions.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.create_haptic_dataset">
+<span id="data-create-haptic-dataset-module"></span><h2>data.create_haptic_dataset module<a class="headerlink" href="#module-data.create_haptic_dataset" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="data.create_haptic_dataset.haptic_dataset">
+<code class="sig-name descname">haptic_dataset</code><span class="sig-paren">(</span><em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/create_haptic_dataset.html#haptic_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.create_haptic_dataset.haptic_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the data with each subject data in a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>haptic_dataset</strong> – A dictionary of haptic dataset of all the subjects
+with different conditions.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.eeg_utils">
+<span id="data-eeg-utils-module"></span><h2>data.eeg_utils module<a class="headerlink" href="#module-data.eeg_utils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="data.eeg_utils.create_eeg_epochs">
+<code class="sig-name descname">create_eeg_epochs</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em>, <em class="sig-param">control_type</em>, <em class="sig-param">config</em>, <em class="sig-param">preload=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/eeg_utils.html#create_eeg_epochs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.eeg_utils.create_eeg_epochs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the epcohed eeg data excluding unnessary
+channels from fif file and also filter the signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>control_type</strong> (<em>str</em>) – Control type (error augmentation or error reduction)</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>epochs</strong> – A mne epoch data after applying filtering.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mne epoch data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.eeg_utils.get_eeg_data">
+<code class="sig-name descname">get_eeg_data</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/eeg_utils.html#get_eeg_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.eeg_utils.get_eeg_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the eeg data excluding unnecessary channels from edf file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>raw</strong> (<em>bool</em>) – Raw file or decontaminated file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>raw_selected</strong> – A selected raw eeg out of whole experiment.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mne epoch objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.eeg_utils.get_eeg_path">
+<code class="sig-name descname">get_eeg_path</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em>, <em class="sig-param">raw=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/eeg_utils.html#get_eeg_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.eeg_utils.get_eeg_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to EEG data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>raw</strong> (<em>bool</em>) – Raw file or decontaminated file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>path to a EEG data to the subject.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.eeg_utils.get_eeg_time">
+<code class="sig-name descname">get_eeg_time</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/eeg_utils.html#get_eeg_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.eeg_utils.get_eeg_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start time of eeg recording.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>EEG recorded time.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>time</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.eeg_utils.get_haptic_path">
+<code class="sig-name descname">get_haptic_path</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em>, <em class="sig-param">control_type</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/eeg_utils.html#get_haptic_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.eeg_utils.get_haptic_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the trial file path  a subject.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>control_type</strong> (<em>str</em>) – Control type (error augmentation or error reduction)</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>trial_path</strong> – The path to a trial (Force) data to the subject.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.eeg_utils.get_haptic_time">
+<code class="sig-name descname">get_haptic_time</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em>, <em class="sig-param">control_type</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/eeg_utils.html#get_haptic_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.eeg_utils.get_haptic_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the start and end time of a trial to align with eeg data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>control_type</strong> (<em>str</em>) – Control type (error augmentation or error reduction)</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>trial_start</strong> (<em>float</em>) – Start time of the trial (in seconds) with eeg as reference</p></li>
+<li><p><strong>trial_end</strong> (<em>float</em>) – End time of the trial (in seconds) with eeg as reference</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.eeg_utils.read_eeg_epochs">
+<code class="sig-name descname">read_eeg_epochs</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em>, <em class="sig-param">control_type</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/eeg_utils.html#read_eeg_epochs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.eeg_utils.read_eeg_epochs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the eeg epoch file of given subject and trial</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>control_type</strong> (<em>str</em>) – Control type (error augmentation or error reduction)</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>epoch</strong> – Epoch data for the given subject, hand, and control type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mne epoch object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.haptics_utils">
+<span id="data-haptics-utils-module"></span><h2>data.haptics_utils module<a class="headerlink" href="#module-data.haptics_utils" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="data.haptics_utils.convert_to_array">
+<code class="sig-name descname">convert_to_array</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/haptics_utils.html#convert_to_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.haptics_utils.convert_to_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the given list of data with strings to numpy array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>list of string tuple</em>) – A list contaning tuples in string format.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>array</strong> – Converted numpy array.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.haptics_utils.create_haptic_emg_epoch">
+<code class="sig-name descname">create_haptic_emg_epoch</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em>, <em class="sig-param">control_type</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/haptics_utils.html#create_haptic_emg_epoch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.haptics_utils.create_haptic_emg_epoch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates haptic and emg epochs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>control_type</strong> (<em>str</em>) – Control type no_force, convergent or divergent.</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – Configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>epochs</strong> – A mne epoch containing all the information from the haptic device.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mne epoch object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.haptics_utils.get_haptic_emg_data">
+<code class="sig-name descname">get_haptic_emg_data</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em>, <em class="sig-param">control_type</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/haptics_utils.html#get_haptic_emg_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.haptics_utils.get_haptic_emg_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the haptic data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>control_type</strong> (<em>str</em>) – Control type (error augmentation or error reduction)</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>trial_start</strong> (<em>start time of the trial with eeg as reference</em>)</p></li>
+<li><p><strong>trial_end</strong> (<em>end time of the trial with eeg as reference</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="data.haptics_utils.get_haptic_path">
+<code class="sig-name descname">get_haptic_path</code><span class="sig-paren">(</span><em class="sig-param">subject</em>, <em class="sig-param">hand_type</em>, <em class="sig-param">control_type</em>, <em class="sig-param">config</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/data/haptics_utils.html#get_haptic_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.haptics_utils.get_haptic_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the trial file path  a subject.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> (<em>str</em>) – String of subject ID e.g. 8801.</p></li>
+<li><p><strong>hand_type</strong> (<em>str</em>) – hand_type of the subject dominant or non-dominant.</p></li>
+<li><p><strong>control_type</strong> (<em>str</em>) – Control type (error augmentation or error reduction)</p></li>
+<li><p><strong>config</strong> (<em>yaml</em>) – The configuration file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>trial_path</strong> – A path to a trial (Force) data to the subject</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-data">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-data" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="features.html" class="btn btn-neutral float-right" title="features package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../getting-started.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -16,7 +16,7 @@ def calculate_engagement_index(data, config):
 
     Returns
     -------
-    dataframe
+    df  : pandas dataframe
         Dataframe of calculated engagement indices.
 
     """
@@ -124,17 +124,19 @@ def engagement_index(subjects, hand_type, control_type, config):
 
     Parameters
     ----------
-    subjects : list
-        List of all the subjects.
-    hand_type : list
-        List of hand types dominant or non-dominant.
+    subject : str
+        String of subject ID e.g. 8801.
+    hand_type : str
+        hand_type of the subject dominant or non-dominant.
+    control_type : str
+        Control type (error augmentation or error reduction)
     config : yaml
         The configuration file.
 
     Returns
     -------
-    dataframe of all enagement index
-        Description of returned object.
+    engagement_index: pandas dataframe
+        A dataframe of all enagement index
 
     """
 

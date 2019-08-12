@@ -1,0 +1,473 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>data.eeg_utils &mdash; Haptic engagement eeg 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Haptic engagement eeg
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/data.html">data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/features.html">features package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/models.html">models package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/visualization.html">visualization package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Haptic engagement eeg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>data.eeg_utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for data.eeg_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">mne</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+
+<span class="kn">import</span> <span class="nn">deepdish</span> <span class="k">as</span> <span class="nn">dd</span>
+
+<span class="c1"># Import configuration</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/config.yml&#39;</span><span class="p">),</span>
+                   <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_eeg_path"><a class="viewcode-back" href="../../source/data.html#data.eeg_utils.get_eeg_path">[docs]</a><span class="k">def</span> <span class="nf">get_eeg_path</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Path to EEG data</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subject : str</span>
+<span class="sd">        String of subject ID e.g. 8801.</span>
+<span class="sd">    hand_type : str</span>
+<span class="sd">        hand_type of the subject dominant or non-dominant.</span>
+<span class="sd">    raw : bool</span>
+<span class="sd">        Raw file or decontaminated file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        path to a EEG data to the subject.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># EEG file</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;raw_eeg_path&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">subject</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s1">&#39;.edf&#39;</span><span class="p">]</span>
+    <span class="n">fname</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>  <span class="c1"># sorted according to time</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">hand_type</span> <span class="o">==</span> <span class="s1">&#39;dominant&#39;</span> <span class="k">else</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="n">raw</span><span class="p">:</span>
+        <span class="n">eeg_path</span> <span class="o">=</span> <span class="n">fname</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span>  <span class="c1"># raw file</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">eeg_path</span> <span class="o">=</span> <span class="n">fname</span><span class="p">[</span><span class="nb">id</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># decontaminated file</span>
+
+    <span class="k">return</span> <span class="n">eeg_path</span></div>
+
+
+<div class="viewcode-block" id="get_eeg_time"><a class="viewcode-back" href="../../source/data.html#data.eeg_utils.get_eeg_time">[docs]</a><span class="k">def</span> <span class="nf">get_eeg_time</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Start time of eeg recording.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subject : str</span>
+<span class="sd">        String of subject ID e.g. 8801.</span>
+<span class="sd">    hand_type : str</span>
+<span class="sd">        hand_type of the subject dominant or non-dominant.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    time</span>
+<span class="sd">        EEG recorded time.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># EEG time</span>
+    <span class="n">eeg_path</span> <span class="o">=</span> <span class="n">get_eeg_path</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">)</span>
+    <span class="n">eeg_time</span> <span class="o">=</span> <span class="n">eeg_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="n">eeg_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">eeg_time</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;0000&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">%m%y%H%M%S</span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">eeg_time</span></div>
+
+
+<div class="viewcode-block" id="get_haptic_path"><a class="viewcode-back" href="../../source/data.html#data.eeg_utils.get_haptic_path">[docs]</a><span class="k">def</span> <span class="nf">get_haptic_path</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the trial file path  a subject.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subject : str</span>
+<span class="sd">        String of subject ID e.g. 8801.</span>
+<span class="sd">    hand_type : str</span>
+<span class="sd">        hand_type of the subject dominant or non-dominant.</span>
+<span class="sd">    control_type : str</span>
+<span class="sd">        Control type (error augmentation or error reduction)</span>
+<span class="sd">    config : yaml</span>
+<span class="sd">        The configuration file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trial_path  : str</span>
+<span class="sd">        The path to a trial (Force) data to the subject.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Trial time</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> \
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;raw_haptic_path&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">subject</span> <span class="o">/</span> <span class="n">hand_type</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">control_type</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="n">haptic_path</span> <span class="o">=</span> <span class="n">file</span>
+
+    <span class="k">return</span> <span class="n">haptic_path</span></div>
+
+
+<div class="viewcode-block" id="get_haptic_time"><a class="viewcode-back" href="../../source/data.html#data.eeg_utils.get_haptic_time">[docs]</a><span class="k">def</span> <span class="nf">get_haptic_time</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the start and end time of a trial to align with eeg data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subject : str</span>
+<span class="sd">        String of subject ID e.g. 8801.</span>
+<span class="sd">    hand_type : str</span>
+<span class="sd">        hand_type of the subject dominant or non-dominant.</span>
+<span class="sd">    control_type : str</span>
+<span class="sd">        Control type (error augmentation or error reduction)</span>
+<span class="sd">    config : yaml</span>
+<span class="sd">        The configuration file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trial_start : float</span>
+<span class="sd">        Start time of the trial (in seconds) with eeg as reference</span>
+<span class="sd">    trial_end   : float</span>
+<span class="sd">        End time of the trial (in seconds) with eeg as reference</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># EEG time</span>
+    <span class="n">haptic_path</span> <span class="o">=</span> <span class="n">get_haptic_path</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="n">eeg_time</span> <span class="o">=</span> <span class="n">get_eeg_time</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">)</span>
+
+    <span class="c1"># Trial time</span>
+    <span class="n">column_name</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">haptic_path</span><span class="p">,</span>
+                                <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                                <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span>
+                                <span class="n">max_rows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">time_idx</span> <span class="o">=</span> <span class="n">column_name</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;dataTime&#39;</span><span class="p">)</span>
+    <span class="n">trial_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">haptic_path</span><span class="p">,</span>
+                               <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                               <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span>
+                               <span class="n">usecols</span><span class="o">=</span><span class="n">time_idx</span><span class="p">,</span>
+                               <span class="n">skip_header</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="c1"># Change the AM or PM</span>
+    <span class="k">if</span> <span class="n">eeg_time</span><span class="o">.</span><span class="n">hour</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">:</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">trial_time</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; PM&#39;</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">trial_time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; PM&#39;</span>
+
+    <span class="c1"># Update year, month, and day</span>
+    <span class="n">start_t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="s1">&#39;%I%M%S</span><span class="si">%f</span><span class="s1"> %p&#39;</span><span class="p">)</span>
+    <span class="n">start_t</span> <span class="o">=</span> <span class="n">start_t</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">eeg_time</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
+                              <span class="n">month</span><span class="o">=</span><span class="n">eeg_time</span><span class="o">.</span><span class="n">month</span><span class="p">,</span>
+                              <span class="n">day</span><span class="o">=</span><span class="n">eeg_time</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
+    <span class="n">end_t</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">end_time</span><span class="p">,</span> <span class="s1">&#39;%I%M%S</span><span class="si">%f</span><span class="s1"> %p&#39;</span><span class="p">)</span>
+    <span class="n">end_t</span> <span class="o">=</span> <span class="n">end_t</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">eeg_time</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
+                          <span class="n">month</span><span class="o">=</span><span class="n">eeg_time</span><span class="o">.</span><span class="n">month</span><span class="p">,</span>
+                          <span class="n">day</span><span class="o">=</span><span class="n">eeg_time</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
+
+    <span class="n">trial_start</span> <span class="o">=</span> <span class="p">(</span><span class="n">start_t</span> <span class="o">-</span> <span class="n">eeg_time</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>  <span class="c1"># convert to seconds</span>
+    <span class="n">trial_end</span> <span class="o">=</span> <span class="p">(</span><span class="n">end_t</span> <span class="o">-</span> <span class="n">eeg_time</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">trial_start</span><span class="p">,</span> <span class="n">trial_end</span></div>
+
+
+<div class="viewcode-block" id="get_eeg_data"><a class="viewcode-back" href="../../source/data.html#data.eeg_utils.get_eeg_data">[docs]</a><span class="k">def</span> <span class="nf">get_eeg_data</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the eeg data excluding unnecessary channels from edf file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subject : str</span>
+<span class="sd">        String of subject ID e.g. 8801.</span>
+<span class="sd">    hand_type : str</span>
+<span class="sd">        hand_type of the subject dominant or non-dominant.</span>
+<span class="sd">    raw : bool</span>
+<span class="sd">        Raw file or decontaminated file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    raw_selected : mne epoch objects</span>
+<span class="sd">        A selected raw eeg out of whole experiment.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">eeg_path</span> <span class="o">=</span> <span class="n">get_eeg_path</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">)</span>
+    <span class="n">eeg_time</span> <span class="o">=</span> <span class="n">get_eeg_time</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">)</span>
+    <span class="c1"># EEG info</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">create_info</span><span class="p">(</span><span class="n">ch_names</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">&#39;POz&#39;</span><span class="p">,</span> <span class="s1">&#39;Fz&#39;</span><span class="p">,</span> <span class="s1">&#39;Cz&#39;</span><span class="p">,</span> <span class="s1">&#39;C3&#39;</span><span class="p">,</span> <span class="s1">&#39;C4&#39;</span><span class="p">,</span> <span class="s1">&#39;F3&#39;</span><span class="p">,</span> <span class="s1">&#39;F4&#39;</span><span class="p">,</span> <span class="s1">&#39;P3&#39;</span><span class="p">,</span> <span class="s1">&#39;P4&#39;</span><span class="p">,</span> <span class="s1">&#39;STI 014&#39;</span>
+    <span class="p">],</span>
+                           <span class="n">ch_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;eeg&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;stim&#39;</span><span class="p">],</span>
+                           <span class="n">sfreq</span><span class="o">=</span><span class="mf">256.0</span><span class="p">,</span>
+                           <span class="n">montage</span><span class="o">=</span><span class="s2">&quot;standard_1020&quot;</span><span class="p">)</span>
+    <span class="c1"># Read the raw data</span>
+    <span class="n">exclude</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;ECG&#39;</span><span class="p">,</span> <span class="s1">&#39;AUX1&#39;</span><span class="p">,</span> <span class="s1">&#39;AUX2&#39;</span><span class="p">,</span> <span class="s1">&#39;AUX3&#39;</span><span class="p">,</span> <span class="s1">&#39;ESUTimestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;SystemTimestamp&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Tilt X&#39;</span><span class="p">,</span> <span class="s1">&#39;Tilt Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Tilt Z&#39;</span>
+    <span class="p">]</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_raw_edf</span><span class="p">(</span><span class="n">eeg_path</span><span class="p">,</span>
+                              <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">exclude</span><span class="o">=</span><span class="n">exclude</span><span class="p">,</span>
+                              <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+    <span class="n">raw_selected</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">RawArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Additional information</span>
+    <span class="n">meas_date</span> <span class="o">=</span> <span class="s1">&#39;measure_time:&#39;</span> <span class="o">+</span> <span class="n">eeg_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%m-</span><span class="si">%d</span><span class="s1">-%Y,%H:%M:%S&#39;</span><span class="p">)</span>
+    <span class="n">raw_selected</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meas_date</span>
+    <span class="n">raw_selected</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;subject_info&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject</span>
+    <span class="n">raw_selected</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;experimenter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;hemanth&#39;</span>
+
+    <span class="k">return</span> <span class="n">raw_selected</span></div>
+
+
+<div class="viewcode-block" id="create_eeg_epochs"><a class="viewcode-back" href="../../source/data.html#data.eeg_utils.create_eeg_epochs">[docs]</a><span class="k">def</span> <span class="nf">create_eeg_epochs</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the epcohed eeg data excluding unnessary</span>
+<span class="sd">    channels from fif file and also filter the signal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subject : str</span>
+<span class="sd">        String of subject ID e.g. 8801.</span>
+<span class="sd">    hand_type : str</span>
+<span class="sd">        hand_type of the subject dominant or non-dominant.</span>
+<span class="sd">    control_type : str</span>
+<span class="sd">        Control type (error augmentation or error reduction)</span>
+<span class="sd">    config : yaml</span>
+<span class="sd">        The configuration file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    epochs  : mne epoch data</span>
+<span class="sd">        A mne epoch data after applying filtering.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">trial_start</span><span class="p">,</span> <span class="n">trial_end</span> <span class="o">=</span> <span class="n">get_haptic_time</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span>
+                                             <span class="n">config</span><span class="p">)</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">get_eeg_data</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">)</span>
+    <span class="n">raw</span><span class="o">.</span><span class="n">notch_filter</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="n">filter_length</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="s1">&#39;zero&#39;</span><span class="p">,</span>
+                     <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Line noise</span>
+    <span class="n">raw</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">l_freq</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">h_freq</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">fir_design</span><span class="o">=</span><span class="s1">&#39;firwin&#39;</span><span class="p">,</span>
+               <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Band pass filter</span>
+    <span class="c1"># raw.set_eeg_reference(&#39;average&#39;)</span>
+    <span class="n">raw_selected</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="n">tmin</span><span class="o">=</span><span class="n">trial_start</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="n">trial_end</span><span class="p">)</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">make_fixed_length_events</span><span class="p">(</span><span class="n">raw_selected</span><span class="p">,</span>
+                                          <span class="n">duration</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;epoch_length&#39;</span><span class="p">])</span>
+    <span class="n">epochs</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">Epochs</span><span class="p">(</span><span class="n">raw_selected</span><span class="p">,</span>
+                        <span class="n">events</span><span class="p">,</span>
+                        <span class="n">tmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">tmax</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;epoch_length&#39;</span><span class="p">],</span>
+                        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">preload</span><span class="o">=</span><span class="n">preload</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">epochs</span></div>
+
+
+<div class="viewcode-block" id="read_eeg_epochs"><a class="viewcode-back" href="../../source/data.html#data.eeg_utils.read_eeg_epochs">[docs]</a><span class="k">def</span> <span class="nf">read_eeg_epochs</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">hand_type</span><span class="p">,</span> <span class="n">control_type</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Reads the eeg epoch file of given subject and trial</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    subject : str</span>
+<span class="sd">        String of subject ID e.g. 8801.</span>
+<span class="sd">    hand_type : str</span>
+<span class="sd">        hand_type of the subject dominant or non-dominant.</span>
+<span class="sd">    control_type : str</span>
+<span class="sd">        Control type (error augmentation or error reduction)</span>
+<span class="sd">    config : yaml</span>
+<span class="sd">        The configuration file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    epoch : mne epoch object</span>
+<span class="sd">        Epoch data for the given subject, hand, and control type.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">eeg_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;clean_eeg_dataset&#39;</span><span class="p">])</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">eeg_path</span><span class="p">)</span>
+    <span class="n">eeg_epochs</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">subject</span><span class="p">][</span><span class="s1">&#39;eeg&#39;</span><span class="p">][</span><span class="n">hand_type</span><span class="p">][</span><span class="n">control_type</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">eeg_epochs</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

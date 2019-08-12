@@ -5,14 +5,15 @@ from .eeg_utils import (create_eeg_epochs)
 def eeg_dataset(config):
     """Create the data with each subject data in a dictionary.
 
-    Parameter
+    Parameters
     ----------
-    subject : string of subject ID e.g. 8801
-    hand   : Dominant or Non dominant hand
+    config : yaml
+        The configuration file.
 
     Returns
     ----------
-    eeg_dataset : dataset of all the subjects with different conditions
+    eeg_dataset : dict
+        A dictionary dataset of all the subjects with different conditions.
 
     """
     eeg_dataset = {}

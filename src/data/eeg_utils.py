@@ -72,14 +72,21 @@ def get_eeg_time(subject, hand_type):
 def get_haptic_path(subject, hand_type, control_type, config):
     """Get the trial file path  a subject.
 
-    Parameter
+    Parameters
     ----------
-    subject : string of subject ID e.g. 7707
-    trial   : HighFine, HighGross, LowFine, LowGross
+    subject : str
+        String of subject ID e.g. 8801.
+    hand_type : str
+        hand_type of the subject dominant or non-dominant.
+    control_type : str
+        Control type (error augmentation or error reduction)
+    config : yaml
+        The configuration file.
 
     Returns
     ----------
-    trial_path   : path to a trial (Force) data to the subject
+    trial_path  : str
+        The path to a trial (Force) data to the subject.
 
     """
     # Trial time
@@ -97,14 +104,23 @@ def get_haptic_path(subject, hand_type, control_type, config):
 def get_haptic_time(subject, hand_type, control_type, config):
     """Get the start and end time of a trial to align with eeg data.
 
-    Parameter
+    Parameters
     ----------
-    subject  : path to eeg file
+    subject : str
+        String of subject ID e.g. 8801.
+    hand_type : str
+        hand_type of the subject dominant or non-dominant.
+    control_type : str
+        Control type (error augmentation or error reduction)
+    config : yaml
+        The configuration file.
 
     Returns
     ----------
-    trial_start : start time of the trial with eeg as reference
-    trial_end   : end time of the trial with eeg as reference
+    trial_start : float
+        Start time of the trial (in seconds) with eeg as reference
+    trial_end   : float
+        End time of the trial (in seconds) with eeg as reference
 
     """
     # EEG time
@@ -157,8 +173,8 @@ def get_eeg_data(subject, hand_type):
 
     Returns
     -------
-    mne data file
-        selected raw eeg out of whole experiment.
+    raw_selected : mne epoch objects
+        A selected raw eeg out of whole experiment.
 
     """
 
@@ -196,14 +212,21 @@ def create_eeg_epochs(subject, hand_type, control_type, config, preload=True):
     """Get the epcohed eeg data excluding unnessary
     channels from fif file and also filter the signal.
 
-    Parameter
+    Parameters
     ----------
-    subject : string of subject ID e.g. 7707
-    trial   : HighFine, HighGross, LowFine, LowGross
+    subject : str
+        String of subject ID e.g. 8801.
+    hand_type : str
+        hand_type of the subject dominant or non-dominant.
+    control_type : str
+        Control type (error augmentation or error reduction)
+    config : yaml
+        The configuration file.
 
     Returns
     ----------
-    epochs  : epoched data
+    epochs  : mne epoch data
+        A mne epoch data after applying filtering.
 
     """
     trial_start, trial_end = get_haptic_time(subject, hand_type, control_type,
@@ -232,15 +255,19 @@ def read_eeg_epochs(subject, hand_type, control_type, config):
 
     Parameters
     ----------
-    subject : string
-        Subject ID e.g. 7707.
-    trial : string
-        e.g. HighFine, HighGross, LowFine, LowGross, AdoptComb, HighComb etc.
+    subject : str
+        String of subject ID e.g. 8801.
+    hand_type : str
+        hand_type of the subject dominant or non-dominant.
+    control_type : str
+        Control type (error augmentation or error reduction)
+    config : yaml
+        The configuration file.
 
     Returns
     -------
-    epoch
-        EEG epoch.
+    epoch : mne epoch object
+        Epoch data for the given subject, hand, and control type.
 
     """
     eeg_path = str(Path(__file__).parents[2] / config['clean_eeg_dataset'])

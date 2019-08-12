@@ -19,7 +19,7 @@ def get_band_power(subject, hand_type, control_type, config):
 
     Returns
     -------
-    dataframe
+    df : pandas dataframe
         6 band powers of given subject and hand type
         at different sensor locations.
 
@@ -64,8 +64,8 @@ def band_power_dataset(config):
 
     Returns
     -------
-    dataframe
-        6 band powers of given subject and hand type
+    df : dict
+        A dictionary 6 band powers of given subject and hand type
         at different sensor locations.
 
     """

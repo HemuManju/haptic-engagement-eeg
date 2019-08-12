@@ -10,12 +10,15 @@ from autoreject import (get_rejection_threshold, AutoReject)
 def autoreject_repair_epochs(epochs, reject_plot=False):
     """Rejects the bad epochs with AutoReject algorithm
 
-    Parameter
+    Parameters
     ----------
-    epochs : Epoched, filtered eeg data
+    epochs : mne epoch object
+        Epoched, filtered eeg data.
+
     Returns
     ----------
-    epochs : Epoched data after rejection of bad epochs
+    epochs : mne epoch object
+        Epoched data after rejection of bad epochs.
 
     """
     # Cleaning with autoreject
@@ -39,13 +42,17 @@ def autoreject_repair_epochs(epochs, reject_plot=False):
 def append_eog_index(epochs, ica):
     """Detects the eye blink aritifact indices and adds that information to ICA
 
-    Parameter
+    Parameters
     ----------
-    epochs : Epoched, filtered, and autorejected eeg data
-    ica    : ica object from mne
+    epochs : mne epoch object
+        Epoched, filtered, and autorejected eeg data
+    ica : mne ica object
+        ICA object from mne.
+
     Returns
     ----------
-    ICA : ICA object with eog indices appended
+    ica : mne ica object
+        ICA object with eog indices appended
 
     """
     # Find bad EOG artifact (eye blinks) by correlating with Fp1
@@ -72,13 +79,17 @@ def append_eog_index(epochs, ica):
 def clean_with_ica(epochs, subject, hand, control, config, show_ica=False):
     """Clean epochs with ICA.
 
-    Parameter
+    Parameters
     ----------
-    epochs : Epoched, filtered, and autorejected eeg data
+    epochs : mne epoch object
+        Epoched, filtered, and autorejected eeg data
+
     Returns
     ----------
-    ica     : ICA object from mne
-    epochs  : ICA cleaned epochs
+    ica : mne epoch object
+        ICA object from mne
+    epochs  : mne epoch object
+        ica cleaned epochs
 
     """
 
@@ -114,13 +125,14 @@ def clean_dataset(config):
     """Create cleaned dataset (by running autoreject and ICA)
     with each subject data in a dictionary.
 
-    Parameter
+    Parameters
     ----------
-    subject : string of subject ID e.g. 7707
-    trial   : HighFine, HighGross, LowFine, LowGross
+    config: yaml
+        The configuration file.
     Returns
     ----------
-    clean_eeg_dataset : dataset of all the subjects with different conditions
+    clean_eeg_dataset : dict
+        A dictionary dataset of all the subjects with different conditions
 
     """
 

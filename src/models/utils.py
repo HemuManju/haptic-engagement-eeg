@@ -8,7 +8,10 @@ def read_with_pickle(path):
     ----------
     path : str
         path to save.
-    dataframe : dict
+
+    Returns
+    __________
+    data : dict
         dictionary of pandas dataframe to save
 
 

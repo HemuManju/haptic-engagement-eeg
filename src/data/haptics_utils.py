@@ -9,14 +9,21 @@ from .eeg_utils import read_eeg_epochs
 def get_haptic_path(subject, hand_type, control_type, config):
     """Get the trial file path  a subject.
 
-    Parameter
+    Parameters
     ----------
-    subject : string of subject ID e.g. 7707
-    trial   : HighFine, HighGross, LowFine, LowGross
+    subject : str
+        String of subject ID e.g. 8801.
+    hand_type : str
+        hand_type of the subject dominant or non-dominant.
+    control_type : str
+        Control type (error augmentation or error reduction)
+    config : yaml
+        The configuration file.
 
     Returns
     ----------
-    trial_path   : path to a trial (Force) data to the subject
+    trial_path  : str
+        A path to a trial (Force) data to the subject
 
     """
     # Trial time
@@ -41,7 +48,7 @@ def convert_to_array(data):
 
     Returns
     -------
-    array
+    array : numpy array
         Converted numpy array.
 
     """
@@ -54,9 +61,16 @@ def convert_to_array(data):
 def get_haptic_emg_data(subject, hand_type, control_type, config):
     """Get the haptic data.
 
-    Parameter
+    Parameters
     ----------
-    subject  : path to eeg file
+    subject : str
+        String of subject ID e.g. 8801.
+    hand_type : str
+        hand_type of the subject dominant or non-dominant.
+    control_type : str
+        Control type (error augmentation or error reduction)
+    config : yaml
+        The configuration file.
 
     Returns
     ----------
@@ -119,8 +133,9 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
 
     Returns
     -------
-    epochs
-        mne epoch object.
+    epochs  : mne epoch object.
+        A mne epoch containing all the information from the haptic device.
+
 
     """
 

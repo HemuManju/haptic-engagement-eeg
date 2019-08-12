@@ -12,10 +12,14 @@ def read_eeg_epochs(subject, hand_type, control_type, config):
 
     Parameters
     ----------
-    subject : string
-        Subject ID e.g. 7707.
-    trial : string
-        e.g. HighFine, HighGross, LowFine, LowGross, AdoptComb, HighComb etc.
+    subject : str
+        String of subject ID e.g. 8801.
+    hand_type : str
+        hand_type of the subject dominant or non-dominant.
+    control_type : str
+        Control type (error augmentation or error reduction)
+    config : yaml
+        The configuration file.
 
     Returns
     -------
@@ -73,8 +77,10 @@ def read_with_pickle(path):
     ----------
     path : str
         path to save.
-    dataframe : dict
-        dictionary of pandas dataframe to save
+    Returns
+    __________
+    data : dict
+        A dictionary of pandas dataframe to save
 
 
     """
@@ -117,6 +123,7 @@ def compute_zero_crossings(data, threshold=np.finfo(np.float64).eps):
 
 def compute_svd_entropy(data, tau=2, emb=10):
     """SVD entropy (per channel).
+
     Parameters
     ----------
     data : ndarray, shape (n_channels, n_times)
@@ -144,6 +151,7 @@ def compute_svd_entropy(data, tau=2, emb=10):
 
 def _embed(x, d, tau):
     """Time-delay embedding.
+
     Parameters
     ----------
     x : ndarray, shape (n_channels, n_times)
@@ -158,6 +166,7 @@ def _embed(x, d, tau):
     -------
     output : ndarray, shape (n_channels, n_times - (d - 1) * tau, d)
     """
+
     tau_max = floor((x.shape[1] - 1) / (d - 1))
     if tau > tau_max:
         warn('The given value (%s) for the parameter `tau` exceeds '
