@@ -34,7 +34,6 @@ def get_haptic_path(subject, hand_type, control_type, config):
         if file_name[0] == control_type:
             break
     haptic_path = file
-
     return haptic_path
 
 
@@ -52,10 +51,15 @@ def convert_to_array(data):
         Converted numpy array.
 
     """
+    try:
+        converted = [list(ast.literal_eval(x)) for x in data]
+        length = len(converted[0])
+    except TypeError:
+        converted = [ast.literal_eval(x) for x in data]
+        length = 1
 
-    converted = [list(ast.literal_eval(x)) for x in data]
-
-    return np.asarray(converted).T
+    data_array = np.asarray(converted).reshape((length, -1))
+    return data_array
 
 
 def get_haptic_emg_data(subject, hand_type, control_type, config):
@@ -87,14 +91,14 @@ def get_haptic_emg_data(subject, hand_type, control_type, config):
                                 delimiter=';',
                                 max_rows=1).tolist()
     features = [
-        'CursorPosition', 'desiredPosition', ' desiredPointOnSpline',
-        'proportionalGain', 'keyPressed'
+        'totalTime', 'CursorPosition', 'cursorVelocity', 'desiredPosition',
+        ' desiredPointOnSpline', 'proportionalGain', 'keyPressed'
     ]
-    dummy = np.genfromtxt(haptic_path,
-                          dtype=str,
-                          delimiter=';',
-                          usecols=0,
-                          skip_header=1).tolist()
+    n_columns = np.genfromtxt(haptic_path,
+                              dtype=str,
+                              delimiter=';',
+                              usecols=0,
+                              skip_header=1).tolist()
     time = np.genfromtxt(haptic_path,
                          dtype=float,
                          delimiter=';',
@@ -102,7 +106,8 @@ def get_haptic_emg_data(subject, hand_type, control_type, config):
                          skip_header=1)
     sampling_freq = 1 / np.mean(np.diff(time))
     ids = [i for i, x in enumerate(column_name) if x in features]
-    haptic_data = np.empty((0, len(dummy)))
+    haptic_data = np.empty((0, len(n_columns)))
+
     columns = []
     for i, id in enumerate(ids):
         data = np.genfromtxt(haptic_path,
@@ -144,27 +149,55 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
     id_cursor = columns.index('cursorposition')
     id_desired = columns.index('desiredposition')
     id_gain = columns.index('proportionalgain')
+    id_velocity = columns.index('cursorvelocity')
+    id_time = columns.index('totaltime')
+
+    # Calculate total time
+    time_mask = haptic_data[id_time, :]
+    time = np.expand_dims(time_mask - time_mask[0], axis=1).T
+    total_time = np.max(time) + time * 0
+
+    # Remove time column
+    haptic_data = np.delete(haptic_data, id_time, 0)
 
     # Calculate the error
     error = haptic_data[id_cursor * 3:id_cursor * 3 + 3, :] - \
         haptic_data[id_desired * 3:id_desired * 3 + 3, :]
     k = haptic_data[id_gain * 3:id_gain * 3 + 3, :]  # gain
+    total_error = np.linalg.norm(error[0:2, :], axis=0, keepdims=True)
+    avg_error = np.mean(total_error) + total_error * 0
+
+    # Calculate the force
     force = np.multiply(error, k)
+    total_force = np.linalg.norm(force[0:2, :], axis=0, keepdims=True)
+
+    # Calculate the speed
+    speed = np.linalg.norm(haptic_data[id_velocity * 3:id_velocity * 3 + 2, :],
+                           axis=0,
+                           keepdims=True)
+    avg_speed = np.mean(speed) + speed * 0
 
     # Concatenate with the haptic data
-    data = np.concatenate((haptic_data, force, error), axis=0)
+    data = np.concatenate((haptic_data, force, error, speed, time, total_force,
+                           total_error, total_time, avg_error, avg_speed),
+                          axis=0)
 
     # The data was stored in such a way that
     # keyPressed is actual emg, so replace the name
     columns[columns.index('keypressed')] = 'emg'
-    haptic_info = [
-        x + y for x in ['cursor', 'desired', 'spline', 'gain']
+    writing_info = [
+        x + y for x in ['cursor', 'velocity', 'desired', 'spline', 'gain']
         for y in ['_x', '_y', '_z']
     ]
     emg_info = ['emg_' + str(i) for i in range(8)]
     force_info = ['force' + x for x in ['_x', '_y', '_z']]
     error_info = ['error' + x for x in ['_x', '_y', '_z']]
-    names_info = haptic_info + emg_info + force_info + error_info
+    haptic_info = [
+        'speed', 'time', 'total_force', 'total_error', 'total_time',
+        'avg_error', 'avg_speed'
+    ]
+
+    names_info = writing_info + emg_info + force_info + error_info + haptic_info  # noqa
     info = mne.create_info(ch_names=names_info,
                            ch_types=['misc'] * len(names_info),
                            sfreq=sampling_freq)
@@ -175,7 +208,7 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
                         tmin=0,
                         tmax=config['epoch_length'],
                         verbose=False,
-                        preload=True)
+                        baseline=(0, 0))
 
     # Sync with eeg time
     eeg_epochs = read_eeg_epochs(subject, hand_type, control_type,
@@ -186,5 +219,4 @@ def create_haptic_emg_epoch(subject, hand_type, control_type, config):
         raise Exception('Two epochs are not of same length!')
     else:
         epochs.drop(drop_id)
-
     return epochs

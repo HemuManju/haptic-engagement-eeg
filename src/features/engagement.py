@@ -109,11 +109,101 @@ def calculate_engagement_index(data, config):
     beta_alpha = data[numerator_features].mean(
         axis=1) / data[denominator_features].mean(axis=1)
 
+    # Alpha laterality index
+    num_bands = ['total_Alpha']
+    num_electrodes = ['P3']
+    den_bands = ['total_Alpha']
+    den_electrodes = ['P4']
+    numerator_features = [
+        electrode + '_' + band for electrode in num_electrodes
+        for band in num_bands
+    ]
+    denominator_features = [
+        electrode + '_' + band for electrode in den_electrodes
+        for band in den_bands
+    ]
+    alpha_lat = (data[denominator_features].mean(axis=1) -
+                 data[numerator_features].mean(axis=1)) / (
+                     data[denominator_features].mean(axis=1) +
+                     data[numerator_features].mean(axis=1))
+
+    # Theta laterality index
+    num_bands = ['Theta']
+    num_electrodes = ['F3']
+    den_bands = ['Theta']
+    den_electrodes = ['F4']
+    numerator_features = [
+        electrode + '_' + band for electrode in num_electrodes
+        for band in num_bands
+    ]
+    denominator_features = [
+        electrode + '_' + band for electrode in den_electrodes
+        for band in den_bands
+    ]
+    theta_lat = (data[denominator_features].mean(axis=1) -
+                 data[numerator_features].mean(axis=1)) / (
+                     data[denominator_features].mean(axis=1) +
+                     data[numerator_features].mean(axis=1))
+
+    # Mu laterality index
+    num_bands = ['higher_Alpha']
+    num_electrodes = ['C3']
+    den_bands = ['higher_Alpha']
+    den_electrodes = ['C4']
+    numerator_features = [
+        electrode + '_' + band for electrode in num_electrodes
+        for band in num_bands
+    ]
+    denominator_features = [
+        electrode + '_' + band for electrode in den_electrodes
+        for band in den_bands
+    ]
+    mu_lat = (data[denominator_features].mean(axis=1) -
+              data[numerator_features].mean(axis=1)) / (
+                  data[denominator_features].mean(axis=1) +
+                  data[numerator_features].mean(axis=1))
+
+    # Alpha frontal asymmetry
+    num_bands = ['total_Alpha']
+    num_electrodes = ['F3']
+    den_bands = ['total_Alpha']
+    den_electrodes = ['F4']
+    numerator_features = [
+        electrode + '_' + band for electrode in num_electrodes
+        for band in num_bands
+    ]
+    denominator_features = [
+        electrode + '_' + band for electrode in den_electrodes
+        for band in den_bands
+    ]
+    alpha_front_lat = (data[denominator_features].mean(axis=1) -
+                       data[numerator_features].mean(axis=1)) / (
+                           data[denominator_features].mean(axis=1) +
+                           data[numerator_features].mean(axis=1))
+
+    # SMR
+    num_bands = ['mu_Rythm']
+    num_electrodes = ['C3']
+    den_bands = ['mu_Rythm']
+    den_electrodes = ['C4']
+    numerator_features = [
+        electrode + '_' + band for electrode in num_electrodes
+        for band in num_bands
+    ]
+    denominator_features = [
+        electrode + '_' + band for electrode in den_electrodes
+        for band in den_bands
+    ]
+    smr = (data[denominator_features].mean(axis=1) +
+           data[numerator_features].mean(axis=1)) / 2
+
     # Form a dataframe from the calculated features
     temp_data = [
         beta_alpha_theta.values, theta_alpha.values, theta.values,
-        alpha_1.values, beta_theta.values, beta_alpha.values
+        alpha_1.values, beta_theta.values, beta_alpha.values, alpha_lat.values,
+        theta_lat.values, mu_lat.values, alpha_front_lat.values, smr.values
     ]
+
     df = pd.DataFrame(temp_data, config['features']).T
 
     return df

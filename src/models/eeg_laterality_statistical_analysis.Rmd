@@ -31,13 +31,13 @@ df$subject <- as.factor(df$subject)
 df
 ```
 ```{r Response}
-response <- df$beta_alpha_theta
+response <- log(df$smr)
 df['output'] <- response
 ```
 
 ```{r Prior analysis}
 df$hand_type <- relevel(df$hand_type, "dominant")
-engagement.model <- glmer(response ~ 1 + (1 | df$hand_type), data = df, family = gaussian(link = log))
+engagement.model <- lmer(response ~ 1 + (1 | df$hand_type), data = df)
 summary(engagement.model)
 ```
 
@@ -55,8 +55,8 @@ df$control_type <- relevel(df$control_type, "no_force")
 df_dominant <- df[df[, 'hand_type'] == 'dominant',]
 response <- df_dominant$output
 
-model2 <- glmer(response ~ control_type + (1 | subject),
-               data = df_dominant, family = gaussian(link = log))
+model2 <- lmer(response ~ control_type + (1 | subject),
+               data = df_dominant)
 summary(model2)
 tab_model(model2)
 ```
@@ -65,8 +65,8 @@ tab_model(model2)
 df_non_dominant <-  df[df[, 'hand_type'] == 'non_dominant',]
 response <- df_non_dominant$output
 df$control_type <- relevel(df$control_type, "no_force")
-model3 <- glmer(response ~ control_type + (1 | subject),
-               data = df_non_dominant, family = gaussian(link = log))
+model3 <- lmer(response ~ control_type + (1 | subject),
+               data = df_non_dominant)
 summary(model3)
 tab_model(model3)
 ```

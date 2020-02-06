@@ -2,18 +2,24 @@
 title: "R Notebook"
 output: html_notebook
 ---
+
 ```{r}
 library(yaml)
+library(ggplot2)
 library(feather)
-library(car)
+library(lme4)
+library(simr)
 library(here)
 library(fitdistrplus)
 library(MASS)
 
+# Read the configuration path
 config <- yaml.load_file("../config.yml")
 
-eeg_r_dataset_path <- here(config$eeg_laterality_r_dataset)
-df <- read_feather(eeg_r_dataset_path)
+emg_r_dataset_path <- here(config$emg_r_dataset)
+df <- read_feather(emg_r_dataset_path)
+df <- na.omit(df)
+config$epoch_length
 
 ```
 
@@ -21,7 +27,7 @@ df <- read_feather(eeg_r_dataset_path)
 ```{r Verify the distribution of the feature}
 
 # Verify the distribution of features 
-feature <- abs(df$mu_lat)
+feature <- df$rms
 qqp(feature, "lnorm")
 
 gamma <- fitdistr(feature, "gamma")
@@ -38,5 +44,5 @@ fit.norm$aic
 fit.weibull$aic
 fit.lnorm$aic
 fit.gamma$aic
-
 ```
+

@@ -18,10 +18,8 @@ def svd_entropy(emg_data):
     -------
     int
         Number of zeros crosses of all 8 channels.
-
     """
     svd = compute_svd_entropy(emg_data)
-
     return svd
 
 
@@ -39,7 +37,6 @@ def get_emg_feature(emg_data, config):
     -------
     array
         An array of calculated emg features.
-
     """
     df = pd.DataFrame(np.empty((0, len(config['emg_features']))),
                       columns=config['emg_features'])
@@ -54,7 +51,6 @@ def get_emg_feature(emg_data, config):
         data = np.vstack((zero_crosses, slope_zero_crosses, svd, rms)).T
         temp = pd.DataFrame(data, columns=config['emg_features'])
         df = pd.concat([df, temp], ignore_index=True, sort=False)
-
     return df
 
 
@@ -70,7 +66,6 @@ def create_emg_features(config):
     -------
     dataframe
         Pandas dataframe.
-
     """
     read_path = Path(__file__).parents[2] / config['raw_haptic_dataset']
     data = read_with_deepdish(read_path)

@@ -1,41 +1,91 @@
 # Global constants
-n_freqs:                  6
-n_electrodes:             9
-n_emg_electrodes:         8
-emg_s_freq:               200
-s_freq:                   256
-channels:                 ['POz', 'Fz', 'Cz', 'C3', 'C4', 'F3', 'F4', 'P3', 'P4']
-freq_bands:               [[4.5, 7], [7.5, 10], [10.5, 12], [7.5, 12], [13.5, 22], [22.5, 30], [13.5, 30]]
-band_names:               ['Theta', 'lower_Alpha', 'higher_Alpha', 'total_Alpha', 'lower_Beta', 'higher_Beta', 'total_Beta']
-features:                 ['beta_alpha_theta', 'theta_alpha','theta','1_alpha', 'beta_theta', 'beta_alpha']
-emg_features:             ['zero_crosses', 'slope_zero_crosses', 'svd', 'rms']
+n_freqs: 6
+n_electrodes: 9
+n_emg_electrodes: 8
+emg_s_freq: 200
+s_freq: 256
+channels: ['POz', 'Fz', 'Cz', 'C3', 'C4', 'F3', 'F4', 'P3', 'P4']
+freq_bands:
+  [
+    [4.5, 7],
+    [7.5, 10],
+    [10.5, 12],
+    [7.5, 12],
+    [13, 15],
+    [13.5, 22],
+    [22.5, 30],
+    [13.5, 30],
+  ]
+band_names:
+  [
+    'Theta',
+    'lower_Alpha',
+    'higher_Alpha',
+    'total_Alpha',
+    'mu_Rythm',
+    'lower_Beta',
+    'higher_Beta',
+    'total_Beta',
+  ]
+features:
+  [
+    'beta_alpha_theta',
+    'theta_alpha',
+    'theta',
+    '1_alpha',
+    'beta_theta',
+    'beta_alpha',
+    'alpha_lat',
+    'theta_lat',
+    'mu_lat',
+    'alpha_front_lat',
+    'smr',
+  ]
+emg_features: ['zero_crosses', 'slope_zero_crosses', 'svd', 'rms']
 ##---------------------------------------------------------------------##
 # Experiment 0
 # EEG parameters
-epoch_length:             2
+epoch_length: 2
 # All subjects are used for training and testing
-subjects:                 ['8801', '8802', '8808', '8815', '8816', '8819', '8820', '8823', '8827', '8830']
-test_subjects:            []
-hand_type:                ['dominant', 'non_dominant']
-control_type:             ['no_force', 'error_reduction', 'error_augmentation']
-use_previous_ica:         False
+subjects:
+  [
+    '8801',
+    '8802',
+    '8808',
+    '8815',
+    '8816',
+    '8819',
+    '8820',
+    '8823',
+    '8827',
+    '8830',
+  ]
+test_subjects: []
+hand_type: ['dominant', 'non_dominant']
+control_type: ['no_force', 'error_reduction', 'error_augmentation']
+use_previous_ica: False
 
 # Path
-raw_eeg_path:             'data/raw/eeg_data/'
-raw_haptic_path:          'data/raw/haptic_data/'
-raw_eeg_dataset:          'data/interim/raw_eeg_exp_0_dataset.h5'
-index_validation_path:    'data/interim/index_validation.xls'
-clean_eeg_dataset:        'data/interim/clean_eeg_exp_0_dataset.h5'
-eeg_haptic_dataset:       'data/processed/eeg_haptic_exp_0_dataset.h5'
+raw_eeg_path: 'data/raw/eeg_data/'
+raw_haptic_path: 'data/raw/haptic_data/'
+raw_eeg_dataset: 'data/interim/raw_eeg_exp_0_dataset.h5'
+raw_haptic_dataset: 'data/interim/raw_haptic_exp_0_dataset.h5'
+
+index_validation_path: 'data/interim/index_validation.xls'
+clean_eeg_dataset: 'data/interim/clean_eeg_exp_0_dataset.h5'
+eeg_haptic_dataset: 'data/processed/eeg_haptic_exp_0_dataset.h5'
 index_validation_dataset: 'data/processed/index_validation_exp_0_dataset.h5'
-band_power_dataset:       'data/processed/band_power_exp_0_dataset.pkl'
-emg_dataset:              'data/processed/emg_exp_0_dataset.pkl'
+band_power_dataset: 'data/processed/band_power_exp_0_dataset.pkl'
+emg_dataset: 'data/processed/emg_exp_0_dataset.pkl'
 engagement_index_dataset: 'data/processed/engagement_index_exp_0_dataset.pkl'
-validate_r_dataset:       'data/r_data/validate_r_exp_0_dataset.RData'
-eeg_r_dataset:            'data/r_data/eeg_r_exp_0_dataset.RData'
-emg_r_dataset:            'data/r_data/emg_r_exp_0_dataset.RData'
-raw_haptic_dataset:       'data/interim/raw_haptic_exp_0_dataset.h5'
-trained_model_path:       'models/experiment_0'
+engagement_index_dataset_with_laterality: 'data/processed/engagement_index_laterality_exp_0_dataset.pkl'
+validate_r_dataset: 'data/r_data/validate_r_exp_0_dataset.RData'
+eeg_r_dataset: 'data/r_data/eeg_r_exp_0_dataset.RData'
+eeg_laterality_r_dataset: 'data/r_data/eeg_laterality_r_exp_0_dataset.RData'
+emg_r_dataset: 'data/r_data/emg_r_exp_0_dataset.RData'
+haptic_r_dataset: 'data/r_data/haptic_exp_0_dataset.RData'
+haptic_dataset: 'data/processed/haptic_exp_0_dataset.h5'
+trained_model_path: 'models/experiment_0'
 ##---------------------------------------------------------------------##
 # Experiment 1
 # EEG parameters

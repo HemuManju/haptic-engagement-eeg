@@ -1,0 +1,116 @@
+---
+title: "eeg_statistical_analysis"
+---
+```{r Initialization}
+rm(list=ls())
+
+library(yaml)
+library(ggplot2)
+library(feather)
+library(lme4)
+library(simr)
+library(here)
+# library(sjPlot)
+# library(sjmisc)
+# library(stargazer)
+# library(ggpubr)
+
+
+# Read the configuration file
+config <- yaml.load_file("../config.yml")
+
+haptic_r_dataset_path <- here(config$haptic_r_dataset)
+df <- read_feather(haptic_r_dataset_path)
+df <- na.omit(df)
+config$epoch_length
+
+# Convert to factor
+df$control_type <- as.factor(df$control_type)
+df$hand_type <- as.factor(df$hand_type)
+df$subject <- as.factor(df$subject)
+df
+```
+```{r Prior Linear model for speed using both the hand type}
+df_speed <- unique(df[, c('hand_type', 'subject', 'speed', 'control_type')])
+response <- df_speed$speed
+
+df_speed$hand_type <- relevel(df_speed$hand_type, "dominant")
+speed.model <- lmer(response ~  df_speed$hand_type + (1 | subject), data = df_speed)
+summary(speed.model)
+
+print('---------------------------------------------------------------------------')
+# r Linear model for speed using only dominant hand
+df_speed <- unique(df[, c('hand_type', 'subject', 'speed', 'control_type')])
+df$control_type <- relevel(df$control_type, "no_force")
+df_dominant <- df_speed[df_speed[, 'hand_type'] == 'dominant',]
+response <- df_dominant$speed
+
+model <- lmer(response ~ control_type + (1 | subject),data = df_dominant)
+summary(model)
+
+print('---------------------------------------------------------------------------')
+df_speed <- unique(df[, c('hand_type', 'subject', 'speed', 'control_type')])
+df$control_type <- relevel(df$control_type, "no_force")
+df_non_dominant <- df_speed[df_speed[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$speed
+
+model <- lmer(response ~ control_type + (1 | subject),data = df_non_dominant)
+summary(model)
+```
+
+
+```{r Prior Linear model for speed using both the hand type}
+df_time <- unique(df[, c('hand_type', 'subject', 'total_time', 'control_type')])
+response <- df_time$total_time
+
+df_time$hand_type <- relevel(df_time$hand_type, "dominant")
+speed.model <- lmer(response ~  df_time$hand_type + (1 | subject), data = df_time)
+summary(speed.model)
+
+print('---------------------------------------------------------------------------')
+# r Linear model for speed using only dominant hand
+df_time <- unique(df[, c('hand_type', 'subject', 'total_time', 'control_type')])
+df$control_type <- relevel(df$control_type, "no_force")
+df_dominant <- df_time[df_time[, 'hand_type'] == 'dominant',]
+response <- df_dominant$total_time
+
+model <- lmer(response ~ control_type + (1 | subject),data = df_dominant)
+summary(model)
+
+print('---------------------------------------------------------------------------')
+df_time <- unique(df[, c('hand_type', 'subject', 'total_time', 'control_type')])
+df$control_type <- relevel(df$control_type, "no_force")
+df_non_dominant <- df_time[df_time[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$total_time
+
+model <- lmer(response ~ control_type + (1 | subject),data = df_non_dominant)
+summary(model)
+```
+
+```{r Prior Linear model for speed using both the hand type}
+df_error <- unique(df[, c('hand_type', 'subject', 'avg_error', 'control_type')])
+response <- df_error$avg_error
+
+df_error$hand_type <- relevel(df_error$hand_type, "dominant")
+error.model <- lmer(response ~  df_error$hand_type + (1 | subject), data = df_error)
+summary(error.model)
+
+print('---------------------------------------------------------------------------')
+# r Linear model for speed using only dominant hand
+df_error <- unique(df[, c('hand_type', 'subject', 'avg_error', 'control_type')])
+df$control_type <- relevel(df$control_type, "no_force")
+df_dominant <- df_error[df_error[, 'hand_type'] == 'dominant',]
+response <- df_dominant$avg_error
+
+model <- lmer(response ~ control_type + (1 | subject),data = df_dominant)
+summary(model)
+
+print('---------------------------------------------------------------------------')
+df_error <- unique(df[, c('hand_type', 'subject', 'avg_error', 'control_type')])
+df$control_type <- relevel(df$control_type, "no_force")
+df_non_dominant <- df_error[df_error[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$avg_error
+
+model <- lmer(response ~ control_type + (1 | subject),data = df_non_dominant)
+summary(model)
+```

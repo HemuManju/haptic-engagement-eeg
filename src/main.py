@@ -8,14 +8,17 @@ from data.clean_eeg_dataset import clean_dataset
 from features.band_power import band_power_dataset
 from features.engagement import engagement_index
 from features.emg_features import create_emg_features
+from features.haptic_features import create_haptic_features
 from features.utils import (save_to_r_dataset, read_with_pickle,
                             read_with_deepdish)
 
 from models.index_validation import validate_engagement_index
 
-from .utils import (skip_run, save_with_deepdish, save_with_pickle)
+from utils import (skip_run, save_with_deepdish, save_with_pickle)
 
-config = yaml.load(open('config.yml'), Loader=yaml.FullLoader)
+# The configuration file
+config_path = Path(__file__).parents[1] / 'src/config.yml'
+config = yaml.load(open(str(config_path)), Loader=yaml.SafeLoader)
 
 with skip_run('skip', 'create_eeg_dataset') as check, check():
     eeg_dataset = eeg_dataset(config)
@@ -52,6 +55,14 @@ with skip_run('skip', 'engagement_index') as check, check():
     save_path = Path(__file__).parents[1] / config['engagement_index_dataset']
     save_with_pickle(str(save_path), engagement_index_dataset, save=True)
 
+with skip_run('skip', 'engagement_index_with_laterality') as check, check():
+    engagement_index_dataset = engagement_index(config['subjects'],
+                                                config['hand_type'],
+                                                config['control_type'], config)
+    save_path = Path(__file__).parents[1] / config[
+        'engagement_index_dataset_with_laterality']
+    save_with_pickle(str(save_path), engagement_index_dataset, save=True)
+
 with skip_run('skip', 'convert_enagement_to_r_dataset') as check, check():
     # Read the pandas dataframe
     read_path = Path(__file__).parents[1] / config['engagement_index_dataset']
@@ -59,10 +70,30 @@ with skip_run('skip', 'convert_enagement_to_r_dataset') as check, check():
     save_path = Path(__file__).parents[1] / config['eeg_r_dataset']
     save_to_r_dataset(df, str(save_path))
 
+with skip_run('skip', 'convert_enag_later_to_r_dataset') as check, check():
+    # Read the pandas dataframe
+    read_path = Path(__file__).parents[1] / config[
+        'engagement_index_dataset_with_laterality']
+    df = read_with_pickle(read_path)
+    save_path = Path(__file__).parents[1] / config['eeg_laterality_r_dataset']
+    save_to_r_dataset(df, str(save_path))
+
 with skip_run('skip', 'create_haptic_dataset') as check, check():
     haptic_dataset = haptic_dataset(config)
     save_path = Path(__file__).parents[1] / config['raw_haptic_dataset']
     save_with_deepdish(str(save_path), haptic_dataset, save=True)
+
+with skip_run('run', 'haptic_features') as check, check():
+    emg_dataset = create_haptic_features(config)
+    save_path = Path(__file__).parents[1] / config['haptic_dataset']
+    save_with_pickle(str(save_path), emg_dataset, save=True)
+
+with skip_run('run', 'convert_haptic_to_r_dataset') as check, check():
+    # Read the pandas dataframe
+    read_path = Path(__file__).parents[1] / config['haptic_dataset']
+    df = read_with_pickle(read_path)
+    save_path = Path(__file__).parents[1] / config['haptic_r_dataset']
+    save_to_r_dataset(df, str(save_path))
 
 with skip_run('skip', 'emg_features') as check, check():
     emg_dataset = create_emg_features(config)

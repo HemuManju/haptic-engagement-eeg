@@ -21,8 +21,8 @@ library(ggpubr)
 # Read the configuration file
 config <- yaml.load_file("../config.yml")
 
-eeg_r_dataset_path <- here(config$eeg_laterality_r_dataset)
-df <- read_feather(eeg_r_dataset_path)
+haptic_r_dataset_path <- here(config$haptic_r_dataset)
+df <- read_feather(haptic_r_dataset_path)
 df <- na.omit(df)
 config$epoch_length
 
@@ -31,8 +31,9 @@ df$control_type <- as.factor(df$control_type)
 df$hand_type <- as.factor(df$hand_type)
 df$subject <- as.factor(df$subject)
 
-response <- df$alpha_lat
+response <- df$avg_speed
 df['output'] <- response
+df
 ```
 
 ```{r Plotting for group non dominant hand}
@@ -74,7 +75,7 @@ qplot(control_type, response, facets = . ~ subject,
 
 ```{r Plotting non dominant hand engagement index}
 df_non_dominant <-  df[df[, 'hand_type'] == 'non_dominant',]
-plot_df <- df_non_dominant [df_non_dominant [, 'subject'] == '8820',]
+plot_df <- df_non_dominant [df_non_dominant [, 'subject'] == '8816',]
 
 comparison_list <- list( c("no_force", "error_augmentation"), 
                          c("no_force", "error_reduction"), 
@@ -82,7 +83,7 @@ comparison_list <- list( c("no_force", "error_augmentation"),
 
 at.x <- seq(1,by=.1,length.out=3)
 pdf("significance_non_dominant.pdf",width=4,height=4)
-p <- ggboxplot(plot_df, x = 'control_type', y = 'beta_alpha_theta',
+p <- ggboxplot(plot_df, x = 'control_type', y = 'speed',
                fill = 'control_type', bxp.errorbar=TRUE, 
                bxp.errorbar.width = 0.15, width = 0.35, 
                outline=FALSE, boxwex=.1) + 
@@ -100,15 +101,15 @@ stat_compare_means(
 
 ```{r Plotting dominant hand engagement index}
 df_dominant <-  df[df[, 'hand_type'] == 'dominant',]
-plot_df <- df_dominant [df_dominant [, 'subject'] == '8820',]
+plot_df <- df_dominant [df_dominant [, 'subject'] == '8816',]
 
 comparison_list <- list( c("no_force", "error_augmentation"), 
                          c("no_force", "error_reduction"), 
                          c("error_reduction", "error_augmentation"))
 
 at.x <- seq(1,by=.1, length.out=3)
-pdf("significance_dominant.pdf",width=4,height=4)
-p <- ggboxplot(plot_df, x = 'control_type', y = 'beta_alpha_theta',
+# pdf("significance_dominant.pdf",width=4,height=4)
+p <- ggboxplot(plot_df, x = 'control_type', y = 'speed',
                fill = 'control_type', bxp.errorbar=TRUE, 
                bxp.errorbar.width = 0.15, width = 0.35, 
                outline=FALSE, boxwex=.1) + 
@@ -218,32 +219,34 @@ config$epoch_length
 df$control_type <- as.factor(df$control_type)
 df$hand_type <- as.factor(df$hand_type)
 df$subject <- as.factor(df$subject)
-response <- df$total_error
+response <- df$avg_speed
 df['output'] <- response
 
 # Analysis
-df <- df[df[, 'subject'] == '8827',]
-# df <-  df[df[, 'hand_type'] == 'non_dominant',]
-df_total_time <- unique(df[, c('hand_type', 'subject', 'speed', 'control_type')])
-df_total_time
-plot_df <- df_total_time
+# df <- df[df[, 'subject'] == '8819',]
+df <-  df[df[, 'hand_type'] == 'dominant',]
+df_avg_speed <- unique(df[, c('hand_type', 'subject', 'avg_speed', 'control_type')])
+df_avg_speed
+plot_df <- df_avg_speed
 
 comparison_list <- list( c("no_force", "error_augmentation"), 
                          c("no_force", "error_reduction"), 
                          c("error_reduction", "error_augmentation"))
 
 at.x <- seq(1,by=.1,length.out=3)
-pdf("avg_error_dominant_non_dominant.pdf",width=4,height=4)
-p <- ggboxplot(plot_df, x = 'hand_type', 
-               y = 'speed',fill='control_type',bxp.errorbar=TRUE, 
+pdf("avg_speed_dominant.pdf", width=4,height=4)
+p <- ggboxplot(plot_df, x = 'control_type', 
+               y = 'avg_speed',fill='control_type',bxp.errorbar=TRUE, 
                bxp.errorbar.width = 0.15, width = 0.35, 
-               outline=FALSE, boxwex=.05) + 
+               outline=FALSE, boxwex=.05, ylim=c(0.4,1.45)) + 
   stat_compare_means(comparison=comparison_list,
-    label.y = c(1.25, 1.45, 1.55)*1.5 + 0,
-    label = "p.signif", ref.group = "0.01"
+    label.y = c(0.55, 0.65, 0.75)*1.75 + 0,
+    label = "p.signif", ref.group = "0.001"
     ) +
     theme_classic() + scale_fill_brewer(palette = "RdBu") + theme(legend.position =
-    "top") + ylab('Speed (1 unit ~ 6mm)') + xlab('Controller type') +
+    "none") + ylab('Avg speed (1 unit/s, 1 unit ~ 6mm)') + xlab('Controller type') +
     scale_x_discrete(labels = c("error augmentation", "error reduction", "no force"))
 p
+dev.off()
+
 ```
