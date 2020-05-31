@@ -1,0 +1,113 @@
+---
+title: "Visualization_of_eeg_force_data"
+---
+
+```{r Initialization}
+rm(list=ls())
+
+library(xlsx)
+library(yaml)
+library(ggplot2)
+library(feather)
+library(lme4)
+library(simr)
+library(here)
+library(sjPlot)
+library(sjmisc)
+library(stargazer)
+library(ggpubr)
+library(gridExtra)
+
+
+# Read the configuration file
+config <- yaml.load_file("../config.yml")
+
+eeg_r_dataset_path <- here(config$engagement_index_force_dataset)
+df <- read_feather(eeg_r_dataset_path)
+df <- na.omit(df)
+
+# Convert to factor
+df$control_type <- as.factor(df$control_type)
+df$hand_type <- as.factor(df$hand_type)
+df$subject <- as.factor(df$subject)
+
+response <- df$beta_alpha_theta
+df['output'] <- response
+```
+
+
+
+```{r Analysis using absoluate force, control type and hand type as the factors}
+# Here the random effect is only the intercept
+
+# Leave the subject 8 from all the analysis
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+df_temp <- df_temp[!(df_temp$control_type=='no_force'),]
+
+# Add the absolute force as a factor
+df_temp$abs_force <- abs(df_temp$total_force)
+df_both_hand <- df_temp
+response <- df_both_hand$output
+
+#  set the reference level for hand and control type
+df_both_hand$control_type <- relevel(df_both_hand$control_type, "error_reduction")
+df_both_hand$hand_type <- relevel(df_both_hand$hand_type, "dominant")
+
+# Fit the mixed effect model
+model <- glmer(response ~ total_force*hand_type + (hand_type | subject),
+              data = df_both_hand, family = gaussian(link = log))
+tab_model(model)
+
+# Correlation analysis
+resp <- log(response)
+weighted_res <- model@resp$wtres
+subjects <- unique(df_both_hand$subject)
+
+test <- c()
+for (subject in subjects){
+  id <- df_both_hand$subject == subject
+  test[subject] <- cor(resp[id], weighted_res[id], method = c("pearson"))
+}
+test
+mean(test)
+```
+
+
+```{r Save the data for python processing}
+
+predicted <- predict(model)
+true_values <- model@resp$y
+predicted_values <- true_values - model@resp$wtres
+df_both_hand$predicted_values <- predict(model)
+df_both_hand$residuals <- model@resp$wtres
+
+# Write to csv
+write.csv(df_both_hand,"df_both_hand_with_predictions.csv", row.names = FALSE)
+```
+
+
+
+```{r plotting with the above fit}
+library(patchwork)
+true_values <- model@resp$y
+predicted_values <- true_values - model@resp$wtres
+
+i <- 1
+plot_list <- list()
+for (subject in subjects){
+  sub_id <- df_both_hand$subject == subject
+  hand_id <-df_both_hand$hand_type == 'non_dominant'
+  id <- sub_id & hand_id
+
+  predicted_temp <- predicted_values[id]
+  true_temp <- true_values[id]
+  plot_list[[i]]  <- qplot(predicted_temp, true_temp, main=i)
+  i <- i + 1 
+}
+do.call(grid.arrange, c(plot, ncol=3, nrow=3))
+```
+
+
+```
+

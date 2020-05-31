@@ -1,18 +1,23 @@
 import yaml
 from pathlib import Path
+import matplotlib.pyplot as plt
 
 from data.create_eeg_dataset import eeg_dataset
-from data.create_haptic_dataset import haptic_dataset
+from data.create_haptic_dataset import (haptic_dataset, haptic_force_dataset)
 from data.clean_eeg_dataset import clean_dataset
 
 from features.band_power import band_power_dataset
-from features.engagement import engagement_index
+from features.engagement import (engagement_index,
+                                 avg_engagement_index_with_force)
 from features.emg_features import create_emg_features
 from features.haptic_features import create_haptic_features
 from features.utils import (save_to_r_dataset, read_with_pickle,
                             read_with_deepdish)
 
 from models.index_validation import validate_engagement_index
+
+from visualization.visualize import (topo_map, force_error,
+                                     plot_mixed_effect_model)
 
 from utils import (skip_run, save_with_deepdish, save_with_pickle)
 
@@ -83,12 +88,13 @@ with skip_run('skip', 'create_haptic_dataset') as check, check():
     save_path = Path(__file__).parents[1] / config['raw_haptic_dataset']
     save_with_deepdish(str(save_path), haptic_dataset, save=True)
 
-with skip_run('run', 'haptic_features') as check, check():
+with skip_run('skip', 'haptic_features') as check, check():
     emg_dataset = create_haptic_features(config)
+    print(emg_dataset)
     save_path = Path(__file__).parents[1] / config['haptic_dataset']
-    save_with_pickle(str(save_path), emg_dataset, save=True)
+    save_with_pickle(str(save_path), emg_dataset, save=False)
 
-with skip_run('run', 'convert_haptic_to_r_dataset') as check, check():
+with skip_run('skip', 'convert_haptic_to_r_dataset') as check, check():
     # Read the pandas dataframe
     read_path = Path(__file__).parents[1] / config['haptic_dataset']
     df = read_with_pickle(read_path)
@@ -106,3 +112,32 @@ with skip_run('skip', 'convert_emg_to_r_dataset') as check, check():
     df = read_with_pickle(read_path)
     save_path = Path(__file__).parents[1] / config['emg_r_dataset']
     save_to_r_dataset(df, str(save_path))
+
+with skip_run('skip', 'plot_topomap') as check, check():
+    subjects = config['subjects'][1]
+    hand_type = config['hand_type'][1]
+    control_type = config['control_type']
+    topo_map(subjects, hand_type, control_type, config)
+
+with skip_run('skip', 'plot_force_error') as check, check():
+    subjects = config['subjects'][2]
+    hand_type = config['hand_type'][1]
+    control_type = config['control_type'][1]
+    print(subjects, hand_type, control_type)
+    force_error(subjects, hand_type, control_type, config)
+
+with skip_run('skip', 'sync_force_data') as check, check():
+    force_dataset = haptic_force_dataset(config)
+    save_path = Path(__file__).parents[1] / config['haptic_force_dataset']
+    save_with_deepdish(str(save_path), force_dataset, save=True)
+
+with skip_run('skip', 'sync_force_eeg_save_to_r') as check, check():
+    df = avg_engagement_index_with_force(config)
+    save_path = Path(
+        __file__).parents[1] / config['engagement_index_force_dataset']
+    save_to_r_dataset(df, str(save_path))
+
+with skip_run('skip', 'plot_mixed_effect_predictions') as check, check():
+    plot_mixed_effect_model(config, 'non_dominant')
+    plot_mixed_effect_model(config, 'dominant')
+    plt.show()

@@ -1,0 +1,161 @@
+---
+title: "eeg_statistical_analysis_with_total_force_as_variable"
+---
+```{r Initialization}
+
+rm(list=ls())
+
+library(yaml)
+library(ggplot2)
+library(feather)
+library(lme4)
+library(simr)
+library(here)
+library(sjPlot)
+library(writexl)
+library(ggpubr)
+
+# Read the configuration file
+config <- yaml.load_file("../config.yml")
+
+eeg_r_dataset_path <- here(config$engagement_index_force_dataset)
+df <- read_feather(eeg_r_dataset_path)
+df <- na.omit(df)
+config$epoch_length
+
+# Convert to factor
+df$control_type <- as.factor(df$control_type)
+df$hand_type <- as.factor(df$hand_type)
+df$subject <- as.factor(df$subject)
+
+response <- df$beta_alpha_theta
+df['output'] <- response
+```
+
+```{r Analysis under non dominant hand with total force as reference}
+
+# Remove subject 8 from all the analysis
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+
+
+# Drop the no force and select the response
+df_non_dominant <- df_non_dominant[!(df_non_dominant$control_type=="no_force"),]
+df_non_dominant <-  df_temp[df_temp[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$output
+
+# Fit the mixed effect model
+model <- glmer(response ~ total_force + (1 | subject),
+              data = df_non_dominant, family = gaussian(link = log))
+summary(model)
+tab_model(model)
+
+# Correlation analysis
+resp <- log(response)
+weighted_res <- model@resp$wtres
+subjects <- unique(df_non_dominant$subject)
+
+test <- c()
+for (subject in subjects){
+  id <- df_non_dominant$subject == subject
+  test[subject] <- cor(resp[id], weighted_res[id], method = c("pearson"))
+}
+test
+mean(test)
+```
+
+```{r Analysis under dominant hand with total force as reference}
+
+# Remove subject 8 from all the analysis
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+
+
+# Drop the no force and select the response
+df_dominant <- df_temp[!(df_temp$control_type=="no_force"),]
+df_dominant <-  df_dominant[df_dominant[, 'hand_type'] == 'dominant',]
+response <- df_dominant$output
+
+# Fit the mixed effect model
+model <- glmer(response ~ total_force + (1 | subject),
+              data = df_dominant, family = gaussian(link = log))
+summary(model)
+tab_model(model)
+
+# Correlation analysis
+resp <- log(response)
+weighted_res <- model@resp$wtres
+subjects <- unique(df_dominant$subject)
+
+test <- c()
+for (subject in subjects){
+  id <- df_dominant$subject == subject
+  test[subject] <- cor(resp[id], weighted_res[id], method = c("pearson"))
+}
+test
+mean(test)
+```
+
+
+```{r Analysis under both the hand with total force as reference}
+
+# Remove subject 8 from all the analysis
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+
+
+# Drop the no force and select the response
+df_both_hand <- df_temp[!(df_temp$control_type=="no_force"),]
+response <- df_both_hand$output
+
+# Fit the mixed effect model
+model <- glmer(response ~ total_force*hand_type + (1 | subject),
+              data = df_both_hand, family = gaussian(link = log))
+summary(model)
+tab_model(model)
+
+# Correlation analysis
+resp <- log(response)
+weighted_res <- model@resp$wtres
+subjects <- unique(df_both_hand$subject)
+
+test <- c()
+for (subject in subjects){
+  id <- df_both_hand$subject == subject
+  test[subject] <- cor(resp[id], weighted_res[id], method = c("pearson"))
+}
+test
+mean(test)
+```
+
+
+```{r Analysis under both the hand with total force as reference with random slope}
+
+# Remove subject 8 from all the analysis
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+
+
+# Drop the no force and select the response
+df_both_hand <- df_temp[!(df_temp$control_type=="no_force"),]
+response <- df_both_hand$output
+
+# Fit the mixed effect model
+model <- glmer(response ~ total_force*hand_type + (hand_type | subject),
+              data = df_both_hand, family = gaussian(link = log))
+summary(model)
+tab_model(model)
+
+# Correlation analysis
+resp <- log(response)
+weighted_res <- model@resp$wtres
+subjects <- unique(df_both_hand$subject)
+
+test <- c()
+for (subject in subjects){
+  id <- df_both_hand$subject == subject
+  test[subject] <- cor(resp[id], weighted_res[id], method = c("pearson"))
+}
+test
+mean(test)
+```

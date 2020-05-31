@@ -31,8 +31,9 @@ df$subject <- as.factor(df$subject)
 df
 ```
 ```{r Prior Linear model for speed using both the hand type}
-df_speed <- unique(df[, c('hand_type', 'subject', 'speed', 'control_type')])
-response <- df_speed$speed
+df$avg_force[df$control_type == 'no_force'] <- 0
+df_speed <- unique(df[, c('hand_type', 'subject', 'avg_force', 'control_type')])
+response <- df_speed$avg_force
 
 df_speed$hand_type <- relevel(df_speed$hand_type, "dominant")
 speed.model <- lmer(response ~  df_speed$hand_type + (1 | subject), data = df_speed)
@@ -40,19 +41,19 @@ summary(speed.model)
 
 print('---------------------------------------------------------------------------')
 # r Linear model for speed using only dominant hand
-df_speed <- unique(df[, c('hand_type', 'subject', 'speed', 'control_type')])
-df$control_type <- relevel(df$control_type, "no_force")
+df_speed <- unique(df[, c('hand_type', 'subject', 'avg_force', 'control_type')])
+df_speed$control_type <- relevel(df_speed$control_type, "no_force")
 df_dominant <- df_speed[df_speed[, 'hand_type'] == 'dominant',]
-response <- df_dominant$speed
+response <- df_dominant$avg_force
 
 model <- lmer(response ~ control_type + (1 | subject),data = df_dominant)
 summary(model)
 
 print('---------------------------------------------------------------------------')
-df_speed <- unique(df[, c('hand_type', 'subject', 'speed', 'control_type')])
-df$control_type <- relevel(df$control_type, "no_force")
+df_speed <- unique(df[, c('hand_type', 'subject', 'avg_force', 'control_type')])
+df_speed$control_type <- relevel(df_speed$control_type, "no_force")
 df_non_dominant <- df_speed[df_speed[, 'hand_type'] == 'non_dominant',]
-response <- df_non_dominant$speed
+response <- df_non_dominant$avg_force
 
 model <- lmer(response ~ control_type + (1 | subject),data = df_non_dominant)
 summary(model)

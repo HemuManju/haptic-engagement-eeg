@@ -43,7 +43,7 @@ def create_haptic_features(config):
     data = read_with_deepdish(read_path)
     channels = [
         'speed', 'time', 'total_force', 'total_error', 'total_time',
-        'avg_error', 'avg_speed'
+        'avg_error', 'avg_speed', 'avg_force'
     ]
     haptic_features = pd.DataFrame(np.empty((0, len(channels))),
                                    columns=channels)

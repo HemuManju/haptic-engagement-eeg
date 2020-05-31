@@ -11,6 +11,8 @@ library(lme4)
 library(simr)
 library(here)
 library(sjPlot)
+library(writexl)
+
 # library(sjmisc)
 # library(stargazer)
 # library(ggpubr)
@@ -19,7 +21,7 @@ library(sjPlot)
 # Read the configuration file
 config <- yaml.load_file("../config.yml")
 
-eeg_r_dataset_path <- here(config$eeg_laterality_r_dataset)
+eeg_r_dataset_path <- here(config$eeg_r_dataset)
 df <- read_feather(eeg_r_dataset_path)
 df <- na.omit(df)
 config$epoch_length
@@ -33,10 +35,11 @@ df
 ```{r Response}
 response <- df$beta_alpha_theta
 df['output'] <- response
+write_xlsx(df, 'engagement_index.xlsx')
 ```
 
 ```{r Prior analysis}
-df$hand_type <- relevel(df$hand_type, "dominant")
+#df$hand_type <- relevel(df$hand_type, "dominant")
 engagement.model <- glmer(response ~ 1 + (1 | df$hand_type), data = df, family = gaussian(link = log))
 summary(engagement.model)
 ```
@@ -54,7 +57,6 @@ summary(engagement.model)
 df$control_type <- relevel(df$control_type, "no_force")
 df_dominant <- df[df[, 'hand_type'] == 'dominant',]
 response <- df_dominant$output
-
 model2 <- glmer(response ~ control_type + (1 | subject),
                data = df_dominant, family = gaussian(link = log))
 summary(model2)

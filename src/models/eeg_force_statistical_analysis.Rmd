@@ -1,0 +1,173 @@
+---
+title: "eeg_statistical_analysis"
+---
+```{r Initialization}
+rm(list=ls())
+
+library(yaml)
+library(ggplot2)
+library(feather)
+library(lme4)
+library(simr)
+library(here)
+library(sjPlot)
+library(writexl)
+
+
+# Read the configuration file
+config <- yaml.load_file("../config.yml")
+
+eeg_r_dataset_path <- here(config$engagement_index_force_dataset)
+df <- read_feather(eeg_r_dataset_path)
+df <- na.omit(df)
+config$epoch_length
+
+# Convert to factor
+df$control_type <- as.factor(df$control_type)
+df$hand_type <- as.factor(df$hand_type)
+df$subject <- as.factor(df$subject)
+
+
+#```{r Uncomment these lines to 
+#subject_to_leave <- config$subjects[7]
+#df <- df[!(df$control_type=="no_force"),]
+#df <- df[!(df$subject==subject_to_leave),]
+
+#subject_to_leave <- config$subjects[8]
+#df <- df[!(df$control_type=="no_force"),]
+#df <- df[!(df$subject==subject_to_leave),]
+
+response <- df$beta_alpha_theta
+df['output'] <- response
+#write_xlsx(df, 'engagement_index_with_force.xlsx')
+
+df_non <-  df[(df$hand_type=='non_dominant'),]
+#{r Plotting}
+x <- df$total_force
+y <- df$output
+# Plot with main and axis titles
+# Change point shape (pch = 19) and remove frame.
+# Add regression line
+plot(x, y, main = "Engagement and Force index",
+     xlab = "Force (N)", ylab = "Engagement index",
+     pch = 19, frame = FALSE)
+abline(lm(y ~ x, data = mtcars), col = "blue")
+```
+
+
+```{r Analysis under non dominant hand with no force as reference}
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+#df_temp <- df
+df_non_dominant <-  df_temp[df_temp[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$output
+df$control_type <- relevel(df$control_type, "no_force")
+model3 <- glmer(response ~ control_type + (1 | subject),
+               data = df_non_dominant, family = gaussian(link = log))
+summary(model3)
+tab_model(model3)
+```
+
+
+```{r Analysis using both total force and hand type}
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+
+# Round off the number of significant figures 
+df_temp <- df[!(df$control_type=="no_force"),]
+df_temp$total_force <- round(df_temp$total_force, digits = 2)
+response <- df_temp$output
+
+df_temp$hand_type <- relevel(df_temp$hand_type, "dominant")
+model2 <- glmer(response ~ total_force*hand_type + (1 | subject),
+               data = df_temp, family = gaussian(link = log))
+summary(model2)
+tab_model(model2)
+```
+
+
+```{r Analysis using both control type and hand type as factors}
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+#df_temp <- df
+response <- df_temp$output
+
+df_temp$control_type <- relevel(df_temp$control_type, "no_force")
+df_temp$hand_type <- relevel(df_temp$hand_type, "dominant")
+model2 <- glmer(response ~ control_type*hand_type + (1 | subject),
+               data = df_temp, family = gaussian(link = log))
+summary(model2)
+tab_model(model2)
+```
+
+
+```{r Analysis under dominant hand using control type}
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+#df_temp <- df
+df_dominant <-  df_temp[df_temp[, 'hand_type'] == 'dominant',]
+response <- df_dominant$output
+df$control_type <- relevel(df$control_type, "no_force")
+model3 <- glmer(response ~ control_type  + (1 | subject),
+               data = df_dominant, family = gaussian(link = log))
+summary(model3)
+tab_model(model3)
+```
+
+
+```{r Analysis under non dominant hand using control type}
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+
+df_non_dominant <-  df_temp[df_temp[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$output
+df$control_type <- relevel(df$control_type, "no_force")
+model3 <- glmer(response ~ control_type + (1 | subject),
+               data = df_non_dominant, family = gaussian(link = log))
+summary(model3)
+tab_model(model3)
+```
+
+```{r Analysis under non dominant hand using error_reduction as reference}
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+
+df_non_dominant <-  df_temp[df_temp[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$output
+df$control_type <- relevel(df$control_type, "error_reduction")
+model3 <- glmer(response ~ control_type + (1 | subject),
+               data = df_non_dominant, family = gaussian(link = log))
+summary(model3)
+tab_model(model3)
+```
+
+
+```{r Analysis under non dominant hand using total force and dropping no force}
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+
+df_temp <- df_temp[!(df_temp$control_type=="no_force"),]
+df_non_dominant <-  df_temp[df_temp[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$output
+df$control_type <- relevel(df$control_type, "no_force")
+model3 <- glmer(response ~ total_force + (1 | subject),
+               data = df_non_dominant, family = gaussian(link = log))
+summary(model3)
+tab_model(model3)
+```
+
+
+```{r Analysis under dominant hand using total force and dropping no force}
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+
+df_temp <- df[!(df$control_type=="no_force"),]
+df_non_dominant <-  df_temp[df_temp[, 'hand_type'] == 'dominant',]
+response <- df_non_dominant$output
+#df$control_type <- relevel(df$control_type, "no_force")
+model3 <- glmer(response ~ total_force + (1 | subject),
+               data = df_non_dominant, family = gaussian(link = log))
+summary(model3)
+tab_model(model3)
+```
+

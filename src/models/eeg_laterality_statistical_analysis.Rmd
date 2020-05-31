@@ -2,6 +2,7 @@
 title: "eeg_statistical_analysis"
 ---
 ```{r Initialization}
+
 rm(list=ls())
 
 library(yaml)
@@ -11,95 +12,122 @@ library(lme4)
 library(simr)
 library(here)
 library(sjPlot)
-# library(sjmisc)
-# library(stargazer)
-# library(ggpubr)
-
+library(writexl)
+library(ggpubr)
 
 # Read the configuration file
 config <- yaml.load_file("../config.yml")
 
-eeg_r_dataset_path <- here(config$eeg_laterality_r_dataset)
+eeg_r_dataset_path <- here(config$engagement_index_force_dataset)
 df <- read_feather(eeg_r_dataset_path)
 df <- na.omit(df)
-config$epoch_length
 
 # Convert to factor
 df$control_type <- as.factor(df$control_type)
 df$hand_type <- as.factor(df$hand_type)
 df$subject <- as.factor(df$subject)
-df
-```
-```{r Response}
+
 response <- log(df$smr)
 df['output'] <- response
 ```
 
-```{r Prior analysis}
-df$hand_type <- relevel(df$hand_type, "dominant")
-engagement.model <- lmer(response ~ 1 + (1 | df$hand_type), data = df)
-summary(engagement.model)
+
+```{r Analysis under non dominant hand with no force as reference}
+# Here the random effect is only the intercept
+
+# Leave the subject 8 from all the analysis
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+
+# Select non-dominant hand
+df_non_dominant <-  df_temp[df_temp[, 'hand_type'] == 'non_dominant',]
+response <- df_non_dominant$output
+df_non_dominant$control_type <- relevel(df_non_dominant$control_type, "no_force") # set the reference level
+
+# Fit the mixed effect model
+model <- glmer(response ~ control_type + (1 | subject),
+              data = df_non_dominant, family = gaussian(link=identity))
+summary(model)
+tab_model(model)
+
+# Correlation analysis
+resp <-identity(response)
+weighted_res <- model@resp$wtres
+subjects <- unique(df_non_dominant$subject)
+
+test <- c()
+for (subject in subjects){
+  id <- df_non_dominant$subject == subject
+  test[subject] <- cor(resp[id], weighted_res[id], method = c("pearson"))
+}
+test
+mean(test)
 ```
 
-```{r Linear model 1 with both dominant and non_dominant hand type}
-# response <- df$output
-# df$control_type <- relevel(df$control_type, "no_force")
-# df$hand_type <- relevel(df$hand_type, "dominant")
-# model1 <- glmer(response ~ control_type + (1 | subject),
-#                data = df, family = gaussian(link = log))
-# summary(model1)
-```
 
-```{r Linear model 2 using only dominant hand}
-df$control_type <- relevel(df$control_type, "no_force")
-df_dominant <- df[df[, 'hand_type'] == 'dominant',]
+```{r Analysis under dominant hand using control type}
+# Leave the subject 8 from all the analysis
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+
+# Select the dominant hand
+df_dominant <-  df_temp[df_temp[, 'hand_type'] == 'dominant',]
 response <- df_dominant$output
+df_dominant$control_type <- relevel(df_dominant$control_type, "no_force")
 
-model2 <- lmer(response ~ control_type + (1 | subject),
-               data = df_dominant)
-summary(model2)
-tab_model(model2)
+# Fit the mixed effect model
+model <- glmer(response ~ control_type  + (1| subject),data = df_dominant)
+summary(model)
+tab_model(model)
+
+# Correlation analysis
+resp <- response
+weighted_res <- model@resp$wtres
+subjects <- unique(df_dominant$subject)
+
+test <- c()
+for (subject in subjects){
+  id <- df_dominant$subject == subject
+  test[subject] <- cor(resp[id], weighted_res[id], method = c("pearson"))
+}
+test
+mean(test)
 ```
 
-```{r Linear model 3 using only non dominant hand}
-df_non_dominant <-  df[df[, 'hand_type'] == 'non_dominant',]
-response <- df_non_dominant$output
-df$control_type <- relevel(df$control_type, "no_force")
-model3 <- lmer(response ~ control_type + (1 | subject),
-               data = df_non_dominant)
-summary(model3)
-tab_model(model3)
-```
+```{r Analysis using absoluate force, control type and hand type as the factors}
+# Here the random effect is only the intercept
 
-```{r Power analysis for non dominant hand}
-df_non_dominant <-  df[df[, 'hand_type'] == 'non_dominant',]
-response <- df_non_dominant$output
-model4 <- glmer(log(response) ~ control_type + (1 | subject),
-               data = df_non_dominant, family = gaussian())
-summary(model4)
-fixef(model4)["control_typeerror_augmentation"]
-fixef(model4)["control_typeerror_augmentation"] <- -0.05
-powerSim(model4, nsim = 50)
+# Leave the subject 8 from all the analysis
+subject_to_leave <- config$subjects[8]
+df_temp <- df[!(df$subject==subject_to_leave),]
+df_temp <- df_temp[!(df_temp$control_type=='no_force'),]
 
-pdf("power_curve_non_dominant.pdf",width=7,height=5)
-pc4 <- powerCurve(model4, along = "subject", nsim = 50)
-plot(pc4)
-dev.off()
-```
+# Add the absolute force as a factor
+df_temp$abs_force <- abs(df_temp$total_force)
+
+df_both_hand <- df_temp
+response <- df_both_hand$output
 
 
-```{r Power analysis for dominant hand}
-df_non_dominant <-  df[df[, 'hand_type'] == 'dominant',]
-response <- df_non_dominant$output
-model5 <- glmer(log(response) ~ control_type + (1 | subject),
-               data = df_non_dominant, family = gaussian())
-summary(model5)
-fixef(model5)["control_typeerror_augmentation"]
-fixef(model5)["control_typeerror_augmentation"] <- 0.05
-powerSim(model5, nsim = 50)
+df_both_hand$control_type <- relevel(df_both_hand$control_type, "error_reduction") # set the reference level
+df_both_hand$hand_type <- relevel(df_both_hand$hand_type, "dominant") # set the
 
-pdf("power_curve_dominant.pdf",width=6,height=4)
-pc5 <- powerCurve(model5, along = "subject", nsim = 50)
-plot(pc5)
-# dev.off()
+# Fit the mixed effect model
+model <- glmer(response ~ control_type*abs_force*hand_type + (hand_type | subject),
+              data = df_both_hand)
+summary(model)
+tab_model(model)
+
+# Correlation analysis
+resp <- response
+weighted_res <- model@resp$wtres
+subjects <- unique(df_both_hand$subject)
+
+test <- c()
+for (subject in subjects){
+  id <- df_both_hand$subject == subject
+  test[subject] <- cor(resp[id], weighted_res[id], method = c("pearson"))
+}
+test
+mean(test)
 ```
